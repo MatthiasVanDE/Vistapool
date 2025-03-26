@@ -14,6 +14,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     sensors.append(VistapoolTemperatureSensor(coordinator))
     sensors.append(VistapoolPhSensor(coordinator))
     sensors.append(VistapoolRedoxSensor(coordinator))
+    sensors.append(VistapoolPresentSensor(coordinator))
+
     # eventueel meer sensoren...
 
     async_add_entities(sensors)
