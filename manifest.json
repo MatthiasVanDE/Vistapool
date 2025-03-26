@@ -3,8 +3,8 @@
   "name": "Vistapool / Sugar Valley Oxilife",
   "version": "1.0.0",
   "config_flow": true,
-  "documentation": "https://github.com/...",
+  "documentation": "https://github.com/MatthiasVanDE/Vistapool",
   "requirements": [],
   "dependencies": [],
-  "codeowners": ["@jouwgithubnaam"]
+  "codeowners": ["@MatthiasVanDE"]
 }
