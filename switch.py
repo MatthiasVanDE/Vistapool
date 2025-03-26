@@ -32,8 +32,8 @@ class VistapoolPumpSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, "filter_device")},
-            "name": "Filter",
+            "identifiers": {(DOMAIN, "pool_device")},
+            "name": "Pool",
             "manufacturer": "Sugar Valley",
             "model": "Oxilife",
         }

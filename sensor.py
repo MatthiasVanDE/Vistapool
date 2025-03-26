@@ -32,6 +32,15 @@ class VistapoolTemperatureSensor(CoordinatorEntity, SensorEntity):
         # bijv. data["main"]["temperature"] = 14.7
         return data.get("main", {}).get("temperature", None)
 
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, "pool_device")},
+            "name": "Pool",
+            "manufacturer": "Sugar Valley",
+            "model": "Oxilife",
+        }
+
 
 class VistapoolPhSensor(CoordinatorEntity, SensorEntity):
     """Toont pH (modules.ph.current)."""
@@ -49,6 +58,15 @@ class VistapoolPhSensor(CoordinatorEntity, SensorEntity):
         except ValueError:
             return None
 
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, "pool_device")},
+            "name": "Pool",
+            "manufacturer": "Sugar Valley",
+            "model": "Oxilife",
+        }
+
 
 class VistapoolRedoxSensor(CoordinatorEntity, SensorEntity):
     """Toont Redox (modules.rx.current)."""
@@ -65,3 +83,32 @@ class VistapoolRedoxSensor(CoordinatorEntity, SensorEntity):
             return float(rx_str)
         except ValueError:
             return None
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, "pool_device")},
+            "name": "Pool",
+            "manufacturer": "Sugar Valley",
+            "model": "Oxilife",
+        }
+
+class VistapoolPresentSensor(CoordinatorEntity, SensorEntity):
+    """Toont apparaatstatus (present)."""
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Apparaat online (true/false)"
+        self._attr_unique_id = f"{coordinator.api._pool_id}_present"
+
+    def native_value(self):
+        data = self.coordinator.data
+        return data.get("present", None)
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, "pool_device")},
+            "name": "Pool",
+            "manufacturer": "Sugar Valley",
+            "model": "Oxilife",
+        }
