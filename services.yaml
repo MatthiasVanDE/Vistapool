@@ -1,0 +1,11 @@
+# services.yaml (optioneel)
+set_timer_intervals:
+  name: "Set Filtration Timer Intervals"
+  description: "Stel de filtration interval1, interval2, etc. in"
+  fields:
+    interval1_from:
+      description: "Begin van interval1 in seconden (vanaf middernacht)"
+      example: 28800
+    interval1_to:
+      description: "Einde van interval1 in seconden"
+      example: 61200
