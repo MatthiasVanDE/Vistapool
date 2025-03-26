@@ -100,6 +100,7 @@ class VistapoolPresentSensor(CoordinatorEntity, SensorEntity):
         self._attr_name = "Apparaat online (true/false)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_present"
 
+    @property
     def native_value(self):
         data = self.coordinator.data
         return data.get("present", None)
