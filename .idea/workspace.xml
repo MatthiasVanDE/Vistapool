@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94c6294b-2c2d-4dcf-a9d1-d5540bd56cb9" name="Changes" comment="presents status added">
+    <list default="true" id="94c6294b-2c2d-4dcf-a9d1-d5540bd56cb9" name="Changes" comment="Added all sensors, switches, numbers and selects">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/number.py" beforeDir="false" afterPath="$PROJECT_DIR$/number.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/select.py" beforeDir="false" afterPath="$PROJECT_DIR$/select.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/sensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/switch.py" beforeDir="false" afterPath="$PROJECT_DIR$/switch.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743086142836</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added all sensors, switches, numbers and selects">
+      <option name="closed" value="true" />
+      <created>1743088671438</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1743088671438</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -135,6 +140,7 @@
     <MESSAGE value="All files" />
     <MESSAGE value="Readme added" />
     <MESSAGE value="presents status added" />
-    <option name="LAST_COMMIT_MESSAGE" value="presents status added" />
+    <MESSAGE value="Added all sensors, switches, numbers and selects" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added all sensors, switches, numbers and selects" />
   </component>
 </project>
