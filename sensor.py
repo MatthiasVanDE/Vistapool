@@ -14,226 +14,225 @@ async def async_setup_entry(hass, entry, async_add_entities):
     #
     # ============ GLOBAL / TOP-LEVEL KEYS ============
     #
-    sensors.append(GlobalIsAWSSensor(coordinator))
-    sensors.append(GlobalWifiSensor(coordinator))
-    sensors.append(GlobalIdSensor(coordinator))
-    sensors.append(GlobalCompanySensor(coordinator))
-    sensors.append(GlobalUpdatedAtSensor(coordinator))
-    sensors.append(GlobalCreatedAtSensor(coordinator))
-    sensors.append(GlobalPresentSensor(coordinator))
+    sensors.append(S_GlobalIsAWSSensor(coordinator))
+    sensors.append(S_GlobalWifiSensor(coordinator))
+    sensors.append(S_GlobalIdSensor(coordinator))
+    sensors.append(S_GlobalCompanySensor(coordinator))
+    sensors.append(S_GlobalUpdatedAtSensor(coordinator))
+    sensors.append(S_GlobalCreatedAtSensor(coordinator))
+    sensors.append(S_GlobalPresentSensor(coordinator))
 
     #
     # ============ BACKWASH KEYS ============
     #
-    sensors.append(BackwashIntervalSensor(coordinator))
-    sensors.append(BackwashModeSensor(coordinator))
-    sensors.append(BackwashRemainingTimeSensor(coordinator))
-    sensors.append(BackwashStatusSensor(coordinator))
-    sensors.append(BackwashFrequencySensor(coordinator))
-    sensors.append(BackwashStartAtSensor(coordinator))
+    sensors.append(S_BackwashIntervalSensor(coordinator))
+    sensors.append(S_BackwashModeSensor(coordinator))
+    sensors.append(S_BackwashRemainingTimeSensor(coordinator))
+    sensors.append(S_BackwashStatusSensor(coordinator))
+    sensors.append(S_BackwashFrequencySensor(coordinator))
+    sensors.append(S_BackwashStartAtSensor(coordinator))
 
     #
     # ============ LIGHT KEYS ============
     #
-    sensors.append(LightModeSensor(coordinator))
-    sensors.append(LightFreqSensor(coordinator))
-    sensors.append(LightToSensor(coordinator))
-    sensors.append(LightFromSensor(coordinator))
-    sensors.append(LightStatusSensor(coordinator))
+    sensors.append(S_LightModeSensor(coordinator))
+    sensors.append(S_LightFreqSensor(coordinator))
+    sensors.append(S_LightToSensor(coordinator))
+    sensors.append(S_LightFromSensor(coordinator))
+    sensors.append(S_LightStatusSensor(coordinator))
 
     #
     # ============ HIDRO KEYS ============
     #
-    sensors.append(HidroClorationEnabledSensor(coordinator))
-    sensors.append(HidroTemperatureEnabledSensor(coordinator))
-    sensors.append(HidroControlSensor(coordinator))
-    sensors.append(HidroFl1Sensor(coordinator))
-    sensors.append(HidroTemperatureValueSensor(coordinator))
-    sensors.append(HidroAl4Sensor(coordinator))
-    sensors.append(HidroHasHidroControlSensor(coordinator))
-    sensors.append(HidroCoverSensor(coordinator))
-    sensors.append(HidroCurrentSensor(coordinator))
-    sensors.append(HidroCellPartialTimeSensor(coordinator))
-    sensors.append(HidroIsElectrolysisSensor(coordinator))
-    sensors.append(HidroFl2Sensor(coordinator))
-    sensors.append(HidroCellTotalTimeSensor(coordinator))
-    sensors.append(HidroReductionSensor(coordinator))
-    sensors.append(HidroLevelSensor(coordinator))
-    sensors.append(HidroMaxAllowedValueSensor(coordinator))
-    sensors.append(HidroLowSensor(coordinator))
-    sensors.append(HidroCoverEnabledSensor(coordinator))
-    sensors.append(HidroMeasureSensor(coordinator))
+    sensors.append(S_HidroClorationEnabledSensor(coordinator))
+    sensors.append(S_HidroTemperatureEnabledSensor(coordinator))
+    sensors.append(S_HidroControlSensor(coordinator))
+    sensors.append(S_HidroFl1Sensor(coordinator))
+    sensors.append(S_HidroTemperatureValueSensor(coordinator))
+    sensors.append(S_HidroAl4Sensor(coordinator))
+    sensors.append(S_HidroHasHidroControlSensor(coordinator))
+    sensors.append(S_HidroCoverSensor(coordinator))
+    sensors.append(S_HidroCurrentSensor(coordinator))
+    sensors.append(S_HidroCellPartialTimeSensor(coordinator))
+    sensors.append(S_HidroIsElectrolysisSensor(coordinator))
+    sensors.append(S_HidroFl2Sensor(coordinator))
+    sensors.append(S_HidroCellTotalTimeSensor(coordinator))
+    sensors.append(S_HidroReductionSensor(coordinator))
+    sensors.append(S_HidroLevelSensor(coordinator))
+    sensors.append(S_HidroMaxAllowedValueSensor(coordinator))
+    sensors.append(S_HidroLowSensor(coordinator))
+    sensors.append(S_HidroCoverEnabledSensor(coordinator))
+    sensors.append(S_HidroMeasureSensor(coordinator))
 
     #
     # ============ FILTRATION KEYS ============
     #
-    sensors.append(FiltrationInterval1FromSensor(coordinator))
-    sensors.append(FiltrationInterval1ToSensor(coordinator))
-    sensors.append(FiltrationInterval2FromSensor(coordinator))
-    sensors.append(FiltrationInterval2ToSensor(coordinator))
-    sensors.append(FiltrationInterval3FromSensor(coordinator))
-    sensors.append(FiltrationInterval3ToSensor(coordinator))
+    sensors.append(S_FiltrationInterval1FromSensor(coordinator))
+    sensors.append(S_FiltrationInterval1ToSensor(coordinator))
+    sensors.append(S_FiltrationInterval2FromSensor(coordinator))
+    sensors.append(S_FiltrationInterval2ToSensor(coordinator))
+    sensors.append(S_FiltrationInterval3FromSensor(coordinator))
+    sensors.append(S_FiltrationInterval3ToSensor(coordinator))
 
-    sensors.append(FiltrationIntelTimeSensor(coordinator))
-    sensors.append(FiltrationIntelTempSensor(coordinator))
+    sensors.append(S_FiltrationIntelTimeSensor(coordinator))
+    sensors.append(S_FiltrationIntelTempSensor(coordinator))
 
-    sensors.append(FiltrationTimerVel2Sensor(coordinator))
-    sensors.append(FiltrationHasSmartSensor(coordinator))
+    sensors.append(S_FiltrationTimerVel2Sensor(coordinator))
+    sensors.append(S_FiltrationHasSmartSensor(coordinator))
 
-    sensors.append(FiltrationHeatingTempSensor(coordinator))
-    sensors.append(FiltrationHeatingClimaSensor(coordinator))
-    sensors.append(FiltrationHeatingTempHiSensor(coordinator))
+    sensors.append(S_FiltrationHeatingTempSensor(coordinator))
+    sensors.append(S_FiltrationHeatingClimaSensor(coordinator))
+    sensors.append(S_FiltrationHeatingTempHiSensor(coordinator))
 
-    sensors.append(FiltrationManVelSensor(coordinator))
-    sensors.append(FiltrationHasHeatSensor(coordinator))
-    sensors.append(FiltrationPumpTypeSensor(coordinator))
-    sensors.append(FiltrationTimerVel3Sensor(coordinator))
-    sensors.append(FiltrationStatusSensor(coordinator))
-    sensors.append(FiltrationTimerVel1Sensor(coordinator))
+    sensors.append(S_FiltrationManVelSensor(coordinator))
+    sensors.append(S_FiltrationHasHeatSensor(coordinator))
+    sensors.append(S_FiltrationPumpTypeSensor(coordinator))
+    sensors.append(S_FiltrationTimerVel3Sensor(coordinator))
+    sensors.append(S_FiltrationStatusSensor(coordinator))
+    sensors.append(S_FiltrationTimerVel1Sensor(coordinator))
 
-    sensors.append(FiltrationModeSensor(coordinator))
+    sensors.append(S_FiltrationModeSensor(coordinator))
 
     # Filtration.smart
-    sensors.append(FiltrationSmartTempMinSensor(coordinator))
-    sensors.append(FiltrationSmartTempHighSensor(coordinator))
-    sensors.append(FiltrationSmartFreezeSensor(coordinator))
+    sensors.append(S_FiltrationSmartTempMinSensor(coordinator))
+    sensors.append(S_FiltrationSmartTempHighSensor(coordinator))
+    sensors.append(S_FiltrationSmartFreezeSensor(coordinator))
 
     #
     # ============ MAIN KEYS ============
     #
-    sensors.append(MainHideRelaysSensor(coordinator))
-    sensors.append(MainHasUVSensor(coordinator))
-    sensors.append(MainRSSISensor(coordinator))
-    sensors.append(MainHasLEDSensor(coordinator))
-    sensors.append(MainLEDPulseSensor(coordinator))
-    sensors.append(MainHasIOSensor(coordinator))
-    sensors.append(MainHasLinkedAutoSensor(coordinator))
-    sensors.append(MainHideTemperatureSensor(coordinator))
-    sensors.append(MainHideLightingSensor(coordinator))
-    sensors.append(MainFWUEnabledSensor(coordinator))
-    sensors.append(MainNetworkPresentSensor(coordinator))
-    sensors.append(MainVersionSensor(coordinator))
-    sensors.append(MainHasPHSensor(coordinator))
-    sensors.append(MainHasBackwashSensor(coordinator))
-    sensors.append(MainHasWifiSensor(coordinator))
-    sensors.append(MainHasCDSensor(coordinator))
-    sensors.append(MainHideFiltrationSensor(coordinator))
-    sensors.append(MainHasCLSensor(coordinator))
-    sensors.append(MainHasRXSensor(coordinator))
-    sensors.append(MainTemperatureSensor(coordinator))  # watertemp
-    sensors.append(MainWifiVersionSensor(coordinator))
-    sensors.append(MainLocalTimeSensor(coordinator))
-    sensors.append(MainHasLinkedSensor(coordinator))
-    sensors.append(MainHasHidroSensor(coordinator))
+    sensors.append(S_MainHideRelaysSensor(coordinator))
+    sensors.append(S_MainHasUVSensor(coordinator))
+    sensors.append(S_MainRSSISensor(coordinator))
+    sensors.append(S_MainHasLEDSensor(coordinator))
+    sensors.append(S_MainLEDPulseSensor(coordinator))
+    sensors.append(S_MainHasIOSensor(coordinator))
+    sensors.append(S_MainHasLinkedAutoSensor(coordinator))
+    sensors.append(S_MainHideTemperatureSensor(coordinator))
+    sensors.append(S_MainHideLightingSensor(coordinator))
+    sensors.append(S_MainFWUEnabledSensor(coordinator))
+    sensors.append(S_MainNetworkPresentSensor(coordinator))
+    sensors.append(S_MainVersionSensor(coordinator))
+    sensors.append(S_MainHasPHSensor(coordinator))
+    sensors.append(S_MainHasBackwashSensor(coordinator))
+    sensors.append(S_MainHasWifiSensor(coordinator))
+    sensors.append(S_MainHasCDSensor(coordinator))
+    sensors.append(S_MainHideFiltrationSensor(coordinator))
+    sensors.append(S_MainHasCLSensor(coordinator))
+    sensors.append(S_MainHasRXSensor(coordinator))
+    sensors.append(S_MainTemperatureSensor(coordinator))
+    sensors.append(S_MainWifiVersionSensor(coordinator))
+    sensors.append(S_MainLocalTimeSensor(coordinator))
+    sensors.append(S_MainHasLinkedSensor(coordinator))
+    sensors.append(S_MainHasHidroSensor(coordinator))
 
     #
     # ============ MODULES KEYS ============
     #
     # modules.rx
-    sensors.append(ModulesRxPumpStatusSensor(coordinator))
-    sensors.append(ModulesRxCurrentSensor(coordinator))
-    sensors.append(ModulesRxTankSensor(coordinator))
-    sensors.append(ModulesRxStatusValueSensor(coordinator))
+    sensors.append(S_ModulesRxPumpStatusSensor(coordinator))
+    sensors.append(S_ModulesRxCurrentSensor(coordinator))
+    sensors.append(S_ModulesRxTankSensor(coordinator))
+    sensors.append(S_ModulesRxStatusValueSensor(coordinator))
 
     # modules.ph
-    sensors.append(ModulesPhTypeSensor(coordinator))
-    sensors.append(ModulesPhTankSensor(coordinator))
-    sensors.append(ModulesPhCurrentSensor(coordinator))
-    sensors.append(ModulesPhPumpHighOnSensor(coordinator))
-    sensors.append(ModulesPhStatusHighValueSensor(coordinator))
-    sensors.append(ModulesPhStatusLowValueSensor(coordinator))
-    sensors.append(ModulesPhAl3Sensor(coordinator))
-    sensors.append(ModulesPhPumpLowOnSensor(coordinator))
+    sensors.append(S_ModulesPhTypeSensor(coordinator))
+    sensors.append(S_ModulesPhTankSensor(coordinator))
+    sensors.append(S_ModulesPhCurrentSensor(coordinator))
+    sensors.append(S_ModulesPhPumpHighOnSensor(coordinator))
+    sensors.append(S_ModulesPhStatusHighValueSensor(coordinator))
+    sensors.append(S_ModulesPhStatusLowValueSensor(coordinator))
+    sensors.append(S_ModulesPhAl3Sensor(coordinator))
+    sensors.append(S_ModulesPhPumpLowOnSensor(coordinator))
 
     # modules.cl
-    sensors.append(ModulesClPumpStatusSensor(coordinator))
-    sensors.append(ModulesClCurrentSensor(coordinator))
-    sensors.append(ModulesClStatusValueSensor(coordinator))
-    sensors.append(ModulesClTankSensor(coordinator))
+    sensors.append(S_ModulesClPumpStatusSensor(coordinator))
+    sensors.append(S_ModulesClCurrentSensor(coordinator))
+    sensors.append(S_ModulesClStatusValueSensor(coordinator))
+    sensors.append(S_ModulesClTankSensor(coordinator))
 
     # modules.cd
-    sensors.append(ModulesCdCurrentSensor(coordinator))
-    sensors.append(ModulesCdStatusValueSensor(coordinator))
-    sensors.append(ModulesCdTankSensor(coordinator))
+    sensors.append(S_ModulesCdCurrentSensor(coordinator))
+    sensors.append(S_ModulesCdStatusValueSensor(coordinator))
+    sensors.append(S_ModulesCdTankSensor(coordinator))
 
     # modules.uv
-    sensors.append(ModulesUvTotalSensor(coordinator))
-    sensors.append(ModulesUvPartialSensor(coordinator))
-    sensors.append(ModulesUvStatusSensor(coordinator))
+    sensors.append(S_ModulesUvTotalSensor(coordinator))
+    sensors.append(S_ModulesUvPartialSensor(coordinator))
+    sensors.append(S_ModulesUvStatusSensor(coordinator))
 
     # modules.io
-    sensors.append(ModulesIoActivationSensor(coordinator))
-    sensors.append(ModulesIoStatusSensor(coordinator))
-    sensors.append(ModulesIoLevelSensor(coordinator))
+    sensors.append(S_ModulesIoActivationSensor(coordinator))
+    sensors.append(S_ModulesIoStatusSensor(coordinator))
+    sensors.append(S_ModulesIoLevelSensor(coordinator))
 
     #
     # ============ RELAYS KEYS ============
     #
     # relays.filtration
-    sensors.append(RelaysFiltrationHeatingStatusSensor(coordinator))
-    sensors.append(RelaysFiltrationHeatingGpioSensor(coordinator))
-    sensors.append(RelaysFiltrationGpioSensor(coordinator))
+    sensors.append(S_RelaysFiltrationHeatingStatusSensor(coordinator))
+    sensors.append(S_RelaysFiltrationHeatingGpioSensor(coordinator))
+    sensors.append(S_RelaysFiltrationGpioSensor(coordinator))
 
     # relays.backwash
-    sensors.append(RelaysBackwashGpioSensor(coordinator))
+    sensors.append(S_RelaysBackwashGpioSensor(coordinator))
 
     # relays.io
-    sensors.append(RelaysIoGpioSensor(coordinator))
+    sensors.append(S_RelaysIoGpioSensor(coordinator))
 
     # relays.rx
-    sensors.append(RelaysRxGpioSensor(coordinator))
+    sensors.append(S_RelaysRxGpioSensor(coordinator))
 
     # relays.light
-    sensors.append(RelaysLightGpioSensor(coordinator))
+    sensors.append(S_RelaysLightGpioSensor(coordinator))
 
     # relays.cl
-    sensors.append(RelaysClGpioSensor(coordinator))
+    sensors.append(S_RelaysClGpioSensor(coordinator))
 
     # relays.cd
-    sensors.append(RelaysCdGpioSensor(coordinator))
+    sensors.append(S_RelaysCdGpioSensor(coordinator))
 
     # relays.ph (acid/base)
-    sensors.append(RelaysPhAcidGpioSensor(coordinator))
-    sensors.append(RelaysPhBaseGpioSensor(coordinator))
+    sensors.append(S_RelaysPhAcidGpioSensor(coordinator))
+    sensors.append(S_RelaysPhBaseGpioSensor(coordinator))
 
     # relayX (1..4) + uv
-    sensors.append(RelaysUvGpioSensor(coordinator))
+    sensors.append(S_RelaysUvGpioSensor(coordinator))
 
-    sensors.append(RelaysRelay4NameSensor(coordinator))
-    sensors.append(RelaysRelay4InfoFromSensor(coordinator))
-    sensors.append(RelaysRelay4InfoDelaySensor(coordinator))
-    # ... en zo voort voor elk veld in relay4.info ...
-    sensors.append(RelaysRelay4InfoOnOffSensor(coordinator))
-    sensors.append(RelaysRelay4InfoFreq2Sensor(coordinator))
-    sensors.append(RelaysRelay4InfoManAutoTempSensor(coordinator))
-    sensors.append(RelaysRelay4InfoSignalSensor(coordinator))
-    sensors.append(RelaysRelay4InfoFrom2Sensor(coordinator))
-    sensors.append(RelaysRelay4InfoPolaritySensor(coordinator))
-    sensors.append(RelaysRelay4InfoStatusSensor(coordinator))
-    sensors.append(RelaysRelay4InfoFreqSensor(coordinator))
-    sensors.append(RelaysRelay4InfoToSensor(coordinator))
-    sensors.append(RelaysRelay4InfoTo2Sensor(coordinator))
-    sensors.append(RelaysRelay4InfoTiempoOnSensor(coordinator))
-    sensors.append(RelaysRelay4InfoKeySensor(coordinator))
+    sensors.append(S_RelaysRelay4NameSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoFromSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoDelaySensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoOnOffSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoFreq2Sensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoManAutoTempSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoSignalSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoFrom2Sensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoPolaritySensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoStatusSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoFreqSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoToSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoTo2Sensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoTiempoOnSensor(coordinator))
+    sensors.append(S_RelaysRelay4InfoKeySensor(coordinator))
 
     # relay1, relay2, relay3 -> name + info
-    sensors.append(RelaysRelay1NameSensor(coordinator))
-    sensors.extend(make_relay_info_sensors(coordinator, relay_number=1))
-    sensors.append(RelaysRelay2NameSensor(coordinator))
-    sensors.extend(make_relay_info_sensors(coordinator, relay_number=2))
-    sensors.append(RelaysRelay3NameSensor(coordinator))
-    sensors.extend(make_relay_info_sensors(coordinator, relay_number=3))
+    sensors.append(S_RelaysRelay1NameSensor(coordinator))
+    sensors.extend(make_s_relay_info_sensors(coordinator, relay_number=1))
+    sensors.append(S_RelaysRelay2NameSensor(coordinator))
+    sensors.extend(make_s_relay_info_sensors(coordinator, relay_number=2))
+    sensors.append(S_RelaysRelay3NameSensor(coordinator))
+    sensors.extend(make_s_relay_info_sensors(coordinator, relay_number=3))
 
     #
     # ============ FORM KEYS ============
     #
-    sensors.append(FormLngSensor(coordinator))
-    sensors.append(FormCountrySensor(coordinator))
-    sensors.append(FormCitySensor(coordinator))
-    sensors.append(FormNameSensor(coordinator))
-    sensors.append(FormZipcodeSensor(coordinator))
-    sensors.append(FormLatSensor(coordinator))
-    sensors.append(FormStreetSensor(coordinator))
+    sensors.append(S_FormLngSensor(coordinator))
+    sensors.append(S_FormCountrySensor(coordinator))
+    sensors.append(S_FormCitySensor(coordinator))
+    sensors.append(S_FormNameSensor(coordinator))
+    sensors.append(S_FormZipcodeSensor(coordinator))
+    sensors.append(S_FormLatSensor(coordinator))
+    sensors.append(S_FormStreetSensor(coordinator))
 
     async_add_entities(sensors)
 
@@ -242,34 +241,31 @@ async def async_setup_entry(hass, entry, async_add_entities):
 # ==================== HELPER FOR RELAY INFO ====================
 #
 
-def make_relay_info_sensors(coordinator, relay_number: int):
+def make_s_relay_info_sensors(coordinator, relay_number: int):
     """
-    Hulpfunctie die de SensorEntity's voor relay{N}.info.* teruggeeft.
-    Om code-herhaling te vermijden. Je ziet dat relay4 exact hetzelfde struct heeft,
-    dus we doen hier generiek.
+    Hulpfunctie die de SensorEntity's voor relays.relay{N}.info.* teruggeeft,
+    met s_ prefix in de Unique ID.
     """
     base = f"relay{relay_number}"
-    # Return een lijst van sensor classes. Evt. als je alles expliciet wilt, kun je het uitschrijven.
-    # Hier even beknopt ter illustratie:
     return [
-        RelayInfoGenericSensor(coordinator, relay_number, "from"),
-        RelayInfoGenericSensor(coordinator, relay_number, "delay"),
-        RelayInfoGenericSensor(coordinator, relay_number, "onoff"),
-        RelayInfoGenericSensor(coordinator, relay_number, "freq2"),
-        RelayInfoGenericSensor(coordinator, relay_number, "manAutoTemp"),
-        RelayInfoGenericSensor(coordinator, relay_number, "signal"),
-        RelayInfoGenericSensor(coordinator, relay_number, "from2"),
-        RelayInfoGenericSensor(coordinator, relay_number, "polarity"),
-        RelayInfoGenericSensor(coordinator, relay_number, "status"),
-        RelayInfoGenericSensor(coordinator, relay_number, "freq"),
-        RelayInfoGenericSensor(coordinator, relay_number, "to"),
-        RelayInfoGenericSensor(coordinator, relay_number, "to2"),
-        RelayInfoGenericSensor(coordinator, relay_number, "tiempoOn"),
-        RelayInfoGenericSensor(coordinator, relay_number, "key"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "from"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "delay"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "onoff"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "freq2"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "manAutoTemp"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "signal"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "from2"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "polarity"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "status"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "freq"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "to"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "to2"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "tiempoOn"),
+        S_RelayInfoGenericSensor(coordinator, relay_number, "key"),
     ]
 
 
-class RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
+class S_RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
     """
     Reads relays.relay{N}.info.<field>.
     e.g. relays.relay1.info.freq
@@ -280,7 +276,8 @@ class RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
         self._relay_number = relay_number
         self._field = field
         self._attr_name = f"Relay{relay_number} Info {field}"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_relay{relay_number}_info_{field}"
+        # extra 's_' prefix in unique_id
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relay{relay_number}_info_{field}"
 
     @property
     def device_info(self):
@@ -302,15 +299,14 @@ class RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
 
 #
 # ==================== EXAMPLE SENSOR CLASSES ====================
-# Het principe is bij alle hetzelfde: je pakt het pad in data en returnt dat
-# Alle devices krijg elk hun eigen device_info(...) => categorie in HA
+# Alles eronder is gewoon net als voorheen, maar met "s_" prefix
 #
 
 #
 # --------------- GLOBAL / TOP-LEVEL ---------------
 #
 
-class GlobalSensorBase(CoordinatorEntity, SensorEntity):
+class S_GlobalSensorBase(CoordinatorEntity, SensorEntity):
     """Top-level info (isAWS, wifi, id, ...)."""
     @property
     def device_info(self):
@@ -321,77 +317,77 @@ class GlobalSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class GlobalIsAWSSensor(GlobalSensorBase):
+class S_GlobalIsAWSSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "isAWS"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_isaws"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_isaws"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("isAWS", None)
 
 
-class GlobalWifiSensor(GlobalSensorBase):
+class S_GlobalWifiSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Wifi"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_wifi"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_wifi"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("wifi", None)
 
 
-class GlobalIdSensor(GlobalSensorBase):
+class S_GlobalIdSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Pool ID"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_id"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_id"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("id", None)
 
 
-class GlobalCompanySensor(GlobalSensorBase):
+class S_GlobalCompanySensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Company"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_company"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_company"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("company", None)
 
 
-class GlobalUpdatedAtSensor(GlobalSensorBase):
+class S_GlobalUpdatedAtSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Updated At"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_updated_at"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_updated_at"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("updatedAt", None)
 
 
-class GlobalCreatedAtSensor(GlobalSensorBase):
+class S_GlobalCreatedAtSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Created At"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_created_at"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_created_at"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("createdAt", None)
 
 
-class GlobalPresentSensor(GlobalSensorBase):
+class S_GlobalPresentSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Present"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_present"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_present"
 
     @property
     def native_value(self):
@@ -402,7 +398,7 @@ class GlobalPresentSensor(GlobalSensorBase):
 # --------------- BACKWASH ---------------
 #
 
-class BackwashSensorBase(CoordinatorEntity, SensorEntity):
+class S_BackwashSensorBase(CoordinatorEntity, SensorEntity):
     """backwash.* => Filtratie/Backwash device."""
     @property
     def device_info(self):
@@ -413,61 +409,61 @@ class BackwashSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class BackwashIntervalSensor(BackwashSensorBase):
+class S_BackwashIntervalSensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Backwash Interval"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_interval"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_backwash_interval"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("backwash", {}).get("interval", None)
 
-class BackwashModeSensor(BackwashSensorBase):
+class S_BackwashModeSensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Backwash Mode"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_mode"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_backwash_mode"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("backwash", {}).get("mode", None)
 
-class BackwashRemainingTimeSensor(BackwashSensorBase):
+class S_BackwashRemainingTimeSensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Backwash Remaining Time"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_remainingTime"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_backwash_remainingTime"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("backwash", {}).get("remainingTime", None)
 
-class BackwashStatusSensor(BackwashSensorBase):
+class S_BackwashStatusSensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Backwash Status"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_backwash_status"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("backwash", {}).get("status", None)
 
-class BackwashFrequencySensor(BackwashSensorBase):
+class S_BackwashFrequencySensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Backwash Frequency"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_frequency"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_backwash_frequency"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("backwash", {}).get("frequency", None)
 
-class BackwashStartAtSensor(BackwashSensorBase):
+class S_BackwashStartAtSensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Backwash StartAt"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_startAt"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_backwash_startAt"
 
     @property
     def native_value(self):
@@ -478,7 +474,7 @@ class BackwashStartAtSensor(BackwashSensorBase):
 # --------------- LIGHT ---------------
 #
 
-class LightSensorBase(CoordinatorEntity, SensorEntity):
+class S_LightSensorBase(CoordinatorEntity, SensorEntity):
     """light.* => Filtratie/Light device? Of separate 'Lighting' device."""
     @property
     def device_info(self):
@@ -489,51 +485,51 @@ class LightSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class LightModeSensor(LightSensorBase):
+class S_LightModeSensor(S_LightSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Light Mode"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_light_mode"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_light_mode"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("light", {}).get("mode", None)
 
-class LightFreqSensor(LightSensorBase):
+class S_LightFreqSensor(S_LightSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Light Frequency"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_light_freq"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_light_freq"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("light", {}).get("freq", None)
 
-class LightToSensor(LightSensorBase):
+class S_LightToSensor(S_LightSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Light To"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_light_to"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_light_to"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("light", {}).get("to", None)
 
-class LightFromSensor(LightSensorBase):
+class S_LightFromSensor(S_LightSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Light From"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_light_from"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_light_from"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("light", {}).get("from", None)
 
-class LightStatusSensor(LightSensorBase):
+class S_LightStatusSensor(S_LightSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Light Status"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_light_status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_light_status"
 
     @property
     def native_value(self):
@@ -544,7 +540,7 @@ class LightStatusSensor(LightSensorBase):
 # --------------- HIDRO ---------------
 #
 
-class HydrolyseSensorBase(CoordinatorEntity, SensorEntity):
+class S_HydrolyseSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
@@ -554,52 +550,201 @@ class HydrolyseSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class HidroClorationEnabledSensor(HydrolyseSensorBase):
+class S_HidroClorationEnabledSensor(S_HydrolyseSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Cloration Enabled"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_hidro_cloration_enabled"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_cloration_enabled"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("hidro", {}).get("cloration_enabled", None)
 
-# ... etc. Voor elke key in `hidro`:
-class HidroTemperatureEnabledSensor(HydrolyseSensorBase):
+class S_HidroTemperatureEnabledSensor(S_HydrolyseSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Hidro Temperature Enabled"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_hidro_temperature_enabled"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_temperature_enabled"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("hidro", {}).get("temperature_enabled", None)
 
-
-class HidroControlSensor(HydrolyseSensorBase):
+class S_HidroControlSensor(S_HydrolyseSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Hidro Control"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_hidro_control"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_control"
+
     @property
     def native_value(self):
         return self.coordinator.data.get("hidro", {}).get("control", None)
 
-class HidroFl1Sensor(HydrolyseSensorBase):
+class S_HidroFl1Sensor(S_HydrolyseSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Hidro fl1"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_hidro_fl1"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_fl1"
+
     @property
     def native_value(self):
         return self.coordinator.data.get("hidro", {}).get("fl1", None)
 
-# Enzovoort – hetzelfde patroon voor elk veld in `hidro`.
+class S_HidroTemperatureValueSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro Temperature Value"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_temperature_value"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("temperature_value", None)
+
+class S_HidroAl4Sensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro al4"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_al4"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("al4", None)
+
+class S_HidroHasHidroControlSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro HasHidroControl"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_hasHidroControl"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("hasHidroControl", None)
+
+class S_HidroCoverSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro Cover"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_cover"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("cover", None)
+
+class S_HidroCurrentSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro Current"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_current"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("current", None)
+
+class S_HidroCellPartialTimeSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro CellPartialTime"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_cellPartialTime"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("cellPartialTime", None)
+
+class S_HidroIsElectrolysisSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro is_electrolysis"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_is_electrolysis"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("is_electrolysis", None)
+
+class S_HidroFl2Sensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro fl2"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_fl2"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("fl2", None)
+
+class S_HidroCellTotalTimeSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro CellTotalTime"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_cellTotalTime"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("cellTotalTime", None)
+
+class S_HidroReductionSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro Reduction"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_reduction"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("reduction", None)
+
+class S_HidroLevelSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro Level"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_level"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("level", None)
+
+class S_HidroMaxAllowedValueSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro MaxAllowedValue"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_maxAllowedValue"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("maxAllowedValue", None)
+
+class S_HidroLowSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro Low"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_low"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("low", None)
+
+class S_HidroCoverEnabledSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro cover_enabled"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_cover_enabled"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("cover_enabled", None)
+
+class S_HidroMeasureSensor(S_HydrolyseSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hidro measure"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_hidro_measure"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hidro", {}).get("measure", None)
+
 
 #
 # --------------- FILTRATION ---------------
 #
-class FiltrationSensorBase(CoordinatorEntity, SensorEntity):
+class S_FiltrationSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
@@ -609,12 +754,11 @@ class FiltrationSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-# interval1.from
-class FiltrationInterval1FromSensor(FiltrationSensorBase):
+class S_FiltrationInterval1FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Filtration Interval1 From"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_filtration_interval1_from"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_interval1_from"
 
     @property
     def native_value(self):
@@ -622,14 +766,27 @@ class FiltrationInterval1FromSensor(FiltrationSensorBase):
                    .get("interval1", {}) \
                    .get("from", None)
 
-# Enzovoort voor 'to', 'interval2', 'interval3' etc.
+# ... enzovoort, exact zelfde code maar "s_" prefix in unique_id
 
-# Filtration.intel.time
-class FiltrationIntelTimeSensor(FiltrationSensorBase):
+class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Interval1 To"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_interval1_to"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}) \
+                   .get("interval1", {}) \
+                   .get("to", None)
+
+# Enzovoort voor interval2, interval3, etc.
+
+class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Filtration Intel Time"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_filtration_intel_time"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_intel_time"
 
     @property
     def native_value(self):
@@ -637,14 +794,13 @@ class FiltrationIntelTimeSensor(FiltrationSensorBase):
                    .get("intel", {}) \
                    .get("time", None)
 
-# ... etc.
-# Je herhaalt dit voor elk veld: timerVel2, hasSmart, heating.temp, heating.clima, ...
-# mode, status, manVel, pumpType, etc.
+# etc..
+
 
 #
 # --------------- MAIN ---------------
 #
-class MainSensorBase(CoordinatorEntity, SensorEntity):
+class S_MainSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
@@ -654,22 +810,24 @@ class MainSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class MainHideRelaysSensor(MainSensorBase):
+class S_MainHideRelaysSensor(S_MainSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Hide Relays"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_main_hideRelays"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hideRelays"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("main", {}).get("hideRelays", None)
 
-# Enzovoort voor elk veld in 'main' (hasUV, RSSI, hasLED, etc.)
+
+# ... etc. herhaal voor elk veld met "s_" prefix in unique_id
+
 
 #
 # --------------- MODULES ---------------
 #
-class ModulesSensorBase(CoordinatorEntity, SensorEntity):
+class S_ModulesSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
@@ -679,25 +837,26 @@ class ModulesSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class ModulesRxPumpStatusSensor(ModulesSensorBase):
+class S_ModulesRxPumpStatusSensor(S_ModulesSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Modules rx pump_status"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_modules_rx_pump_status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_rx_pump_status"
 
     @property
     def native_value(self):
-        return self.coordinator.data \
-                   .get("modules", {}) \
-                   .get("rx", {}) \
-                   .get("pump_status", None)
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("rx", {})
+                .get("pump_status", None)
+        )
 
-# ... Idem voor alle velden in modules.rx, modules.ph, modules.cl, modules.cd, modules.uv, modules.io.
+# etc. Voor elk veld => s_ prefix
 
 #
 # --------------- RELAYS ---------------
 #
-class RelaysSensorBase(CoordinatorEntity, SensorEntity):
+class S_RelaysSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
@@ -707,26 +866,109 @@ class RelaysSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class RelaysFiltrationHeatingStatusSensor(RelaysSensorBase):
+
+class S_RelaysFiltrationHeatingStatusSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Relays Filtration Heating Status"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_relays_filtration_heating_status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_filtration_heating_status"
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("relays", {}) \
-                   .get("filtration", {}) \
-                   .get("heating", {}) \
-                   .get("status", None)
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("filtration", {})
+                .get("heating", {})
+                .get("status", None)
+        )
 
-# ... etc. net zoals we deden in 'make_relay_info_sensors'.
+
+class S_RelaysFiltrationHeatingGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays Filtration Heating GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_filtration_heating_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("filtration", {})
+                .get("heating", {})
+                .get("gpio", None)
+        )
+
+
+class S_RelaysFiltrationGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays Filtration GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_filtration_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("filtration", {})
+                .get("gpio", None)
+        )
+
+# ... etc for backwash, i.e. S_RelaysBackwashGpioSensor, etc.
 
 
 #
-# --------------- FORM ---------------
+# =============== RELAYS RELAY4 EXAMPLE ================
 #
-class FormSensorBase(CoordinatorEntity, SensorEntity):
+class S_RelaysRelay4NameSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Name"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_name"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("name", None)
+        )
+
+class S_RelaysRelay4InfoFromSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info From"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_from"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("from", None)
+
+class S_RelaysRelay4InfoDelaySensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info Delay"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_delay"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("delay", None)
+
+# etc. voor de rest van relay4.info.* velden
+
+#
+# =============== FORM KEYS ================
+#
+class S_FormSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
@@ -736,44 +978,25 @@ class FormSensorBase(CoordinatorEntity, SensorEntity):
             "model": "Vistapool Controller"
         }
 
-class FormLngSensor(FormSensorBase):
+class S_FormLngSensor(S_FormSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Form lng"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_form_lng"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_lng"
 
     @property
     def native_value(self):
         return self.coordinator.data.get("form", {}).get("lng", None)
 
-class FormCountrySensor(FormSensorBase):
+class S_FormCountrySensor(S_FormSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_name = "Form country"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_form_country"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_country"
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("form", {}).get("country", "")
+        return self.coordinator.data.get("form", {}).get("country", None)
 
-# ... en zo verder voor city, name, zipcode, lat, street
+# etc. herhaal voor city, name, zipcode, lat, street
 
-class RelaysRelay4NameSensor(RelaysSensorBase):
-    def __init__(self, coordinator):
-        super().__init__(coordinator)
-        self._attr_name = "Relay4 Name"
-        self._attr_unique_id = f"{coordinator.api._pool_id}_relay4_name"
-
-    @property
-    def native_value(self):
-        return self.coordinator.data \
-                   .get("relays", {}) \
-                   .get("relay4", {}) \
-                   .get("name", "")
-
-# ... etc. herhaald voor alle relays
-
-
-#
-# Klaar! :-)
-#
