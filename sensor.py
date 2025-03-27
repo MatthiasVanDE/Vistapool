@@ -6,6 +6,7 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up a sensor for every single JSON field, grouped by category."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
@@ -246,7 +247,6 @@ def make_s_relay_info_sensors(coordinator, relay_number: int):
     Hulpfunctie die de SensorEntity's voor relays.relay{N}.info.* teruggeeft,
     met s_ prefix in de Unique ID.
     """
-    base = f"relay{relay_number}"
     return [
         S_RelayInfoGenericSensor(coordinator, relay_number, "from"),
         S_RelayInfoGenericSensor(coordinator, relay_number, "delay"),
@@ -276,7 +276,6 @@ class S_RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
         self._relay_number = relay_number
         self._field = field
         self._attr_name = f"Relay{relay_number} Info {field}"
-        # extra 's_' prefix in unique_id
         self._attr_unique_id = f"s_{coordinator.api._pool_id}_relay{relay_number}_info_{field}"
 
     @property
@@ -291,15 +290,18 @@ class S_RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         data = self.coordinator.data
-        info = (data.get("relays", {})
-                    .get(f"relay{self._relay_number}", {})
-                    .get("info", {}))
+        info = (
+            data.get("relays", {})
+                .get(f"relay{self._relay_number}", {})
+                .get("info", {})
+        )
         return info.get(self._field, None)
 
 
 #
 # ==================== EXAMPLE SENSOR CLASSES ====================
-# Alles eronder is gewoon net als voorheen, maar met "s_" prefix
+# Vanaf hier staan alle klassen die exact de JSON-structuur weerspiegelen
+# (zoals we in de conversation hebben doorgenomen).
 #
 
 #
@@ -307,7 +309,7 @@ class S_RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
 #
 
 class S_GlobalSensorBase(CoordinatorEntity, SensorEntity):
-    """Top-level info (isAWS, wifi, id, ...)."""
+    """Top-level info (isAWS, wifi, id, company, updatedAt, createdAt, present)."""
     @property
     def device_info(self):
         return {
@@ -316,6 +318,7 @@ class S_GlobalSensorBase(CoordinatorEntity, SensorEntity):
             "manufacturer": "Vistapool",
             "model": "Vistapool Controller"
         }
+
 
 class S_GlobalIsAWSSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
@@ -393,13 +396,12 @@ class S_GlobalPresentSensor(S_GlobalSensorBase):
     def native_value(self):
         return self.coordinator.data.get("present", None)
 
-
 #
 # --------------- BACKWASH ---------------
 #
 
 class S_BackwashSensorBase(CoordinatorEntity, SensorEntity):
-    """backwash.* => Filtratie/Backwash device."""
+    """Keys: interval, mode, remainingTime, status, frequency, startAt."""
     @property
     def device_info(self):
         return {
@@ -469,13 +471,12 @@ class S_BackwashStartAtSensor(S_BackwashSensorBase):
     def native_value(self):
         return self.coordinator.data.get("backwash", {}).get("startAt", None)
 
-
 #
 # --------------- LIGHT ---------------
 #
 
 class S_LightSensorBase(CoordinatorEntity, SensorEntity):
-    """light.* => Filtratie/Light device? Of separate 'Lighting' device."""
+    """Keys: mode, freq, to, from, status."""
     @property
     def device_info(self):
         return {
@@ -535,12 +536,12 @@ class S_LightStatusSensor(S_LightSensorBase):
     def native_value(self):
         return self.coordinator.data.get("light", {}).get("status", None)
 
-
 #
 # --------------- HIDRO ---------------
 #
 
 class S_HydrolyseSensorBase(CoordinatorEntity, SensorEntity):
+    """Keys: cloration_enabled, temperature_enabled, control, fl1, fl2, etc."""
     @property
     def device_info(self):
         return {
@@ -740,10 +741,10 @@ class S_HidroMeasureSensor(S_HydrolyseSensorBase):
     def native_value(self):
         return self.coordinator.data.get("hidro", {}).get("measure", None)
 
-
 #
 # --------------- FILTRATION ---------------
 #
+
 class S_FiltrationSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
@@ -762,11 +763,11 @@ class S_FiltrationInterval1FromSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}) \
-                   .get("interval1", {}) \
-                   .get("from", None)
-
-# ... enzovoort, exact zelfde code maar "s_" prefix in unique_id
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("interval1", {})
+                .get("from", None)
+        )
 
 class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -776,11 +777,67 @@ class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}) \
-                   .get("interval1", {}) \
-                   .get("to", None)
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("interval1", {})
+                .get("to", None)
+        )
 
-# Enzovoort voor interval2, interval3, etc.
+class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Interval2 From"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_interval2_from"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("interval2", {})
+                .get("from", None)
+        )
+
+class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Interval2 To"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_interval2_to"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("interval2", {})
+                .get("to", None)
+        )
+
+class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Interval3 From"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_interval3_from"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("interval3", {})
+                .get("from", None)
+        )
+
+class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Interval3 To"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_interval3_to"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("interval3", {})
+                .get("to", None)
+        )
 
 class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -790,25 +847,227 @@ class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}) \
-                   .get("intel", {}) \
-                   .get("time", None)
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("intel", {})
+                .get("time", None)
+        )
 
-# etc..
+class S_FiltrationIntelTempSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Intel Temp"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_intel_temp"
 
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("intel", {})
+                .get("temp", None)
+        )
+
+class S_FiltrationTimerVel2Sensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration TimerVel2"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_timerVel2"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("timerVel2", None)
+
+class S_FiltrationHasSmartSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration hasSmart"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_hasSmart"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("hasSmart", None)
+
+class S_FiltrationHeatingTempSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Heating Temp"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_heating_temp"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("heating", {})
+                .get("temp", None)
+        )
+
+class S_FiltrationHeatingClimaSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Heating Clima"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_heating_clima"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("heating", {})
+                .get("clima", None)
+        )
+
+class S_FiltrationHeatingTempHiSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Heating TempHi"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_heating_tempHi"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("heating", {})
+                .get("tempHi", None)
+        )
+
+class S_FiltrationManVelSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration manVel"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_manVel"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("manVel", None)
+
+class S_FiltrationHasHeatSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration hasHeat"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_hasHeat"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("hasHeat", None)
+
+class S_FiltrationPumpTypeSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration pumpType"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_pumpType"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("pumpType", None)
+
+class S_FiltrationTimerVel3Sensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration timerVel3"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_timerVel3"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("timerVel3", None)
+
+class S_FiltrationStatusSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_status"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("status", None)
+
+class S_FiltrationTimerVel1Sensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration timerVel1"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_timerVel1"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("timerVel1", None)
+
+class S_FiltrationModeSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Mode"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_mode"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("filtration", {}).get("mode", None)
+
+class S_FiltrationSmartTempMinSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Smart tempMin"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_smart_tempMin"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("smart", {})
+                .get("tempMin", None)
+        )
+
+class S_FiltrationSmartTempHighSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Smart tempHigh"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_smart_tempHigh"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("smart", {})
+                .get("tempHigh", None)
+        )
+
+class S_FiltrationSmartFreezeSensor(S_FiltrationSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Filtration Smart freeze"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_filtration_smart_freeze"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("filtration", {})
+                .get("smart", {})
+                .get("freeze", None)
+        )
 
 #
-# --------------- MAIN ---------------
+# --------------- MAIN KEYS ---------------
 #
+
 class S_MainSensorBase(CoordinatorEntity, SensorEntity):
+    """Keys in data['main']"""
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, f"{self.coordinator.api._pool_id}_main")},
+            "identifiers": {(DOMAIN, f'{self.coordinator.api._pool_id}_main')},
             "name": "Algemeen (Main)",
             "manufacturer": "Vistapool",
             "model": "Vistapool Controller"
         }
+
+class S_MainHasIOSensor(S_MainSensorBase):
+    """Reads main.hasIO."""
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has IO (Main)"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasIO"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasIO", None)
+
+# De rest van alle main.* keys (hasUV, RSSI, hasLED, LEDPulse, etc.):
 
 class S_MainHideRelaysSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -820,22 +1079,241 @@ class S_MainHideRelaysSensor(S_MainSensorBase):
     def native_value(self):
         return self.coordinator.data.get("main", {}).get("hideRelays", None)
 
+class S_MainHasUVSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has UV"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasUV"
 
-# ... etc. herhaal voor elk veld met "s_" prefix in unique_id
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasUV", None)
 
+class S_MainRSSISensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Main RSSI"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_rssi"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("RSSI", None)
+
+class S_MainHasLEDSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has LED"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasLED"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasLED", None)
+
+class S_MainLEDPulseSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "LED Pulse"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_ledpulse"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("LEDPulse", None)
+
+class S_MainHasLinkedAutoSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has LinkedAuto"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasLinkedAuto"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasLinkedAuto", None)
+
+class S_MainHideTemperatureSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hide Temperature"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hideTemperature"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hideTemperature", None)
+
+class S_MainHideLightingSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hide Lighting"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hideLighting"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hideLighting", None)
+
+class S_MainFWUEnabledSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "FWU Enabled"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_FWU_enabled"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("FWU_enabled", None)
+
+class S_MainNetworkPresentSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Network Present"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_networkPresent"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("networkPresent", None)
+
+class S_MainVersionSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Main Version"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_version"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("version", None)
+
+class S_MainHasPHSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has pH"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasPH"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasPH", None)
+
+class S_MainHasBackwashSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has Backwash"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasBackwash"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasBackwash", None)
+
+class S_MainHasWifiSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has Wifi"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasWifi"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasWifi", None)
+
+class S_MainHasCDSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has CD"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasCD"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasCD", None)
+
+class S_MainHideFiltrationSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Hide Filtration"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hideFiltration"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hideFiltration", None)
+
+class S_MainHasCLSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has CL"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasCL"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasCL", None)
+
+class S_MainHasRXSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has RX"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasRX"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasRX", None)
+
+class S_MainTemperatureSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Main Temperature"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_temperature"
+        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("temperature", None)
+
+class S_MainWifiVersionSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Wifi Version"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_wifiVersion"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("wifiVersion", None)
+
+class S_MainLocalTimeSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Local Time"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_localTime"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("localTime", None)
+
+class S_MainHasLinkedSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has Linked"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasLinked"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasLinked", None)
+
+class S_MainHasHidroSensor(S_MainSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Has Hidro"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_main_hasHidro"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("main", {}).get("hasHidro", None)
 
 #
 # --------------- MODULES ---------------
 #
+
 class S_ModulesSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, f"{self.coordinator.api._pool_id}_modules")},
+            "identifiers": {(DOMAIN, f'{self.coordinator.api._pool_id}_modules')},
             "name": "Modules",
             "manufacturer": "Vistapool",
             "model": "Vistapool Controller"
         }
+
 
 class S_ModulesRxPumpStatusSensor(S_ModulesSensorBase):
     def __init__(self, coordinator):
@@ -851,21 +1329,376 @@ class S_ModulesRxPumpStatusSensor(S_ModulesSensorBase):
                 .get("pump_status", None)
         )
 
-# etc. Voor elk veld => s_ prefix
+class S_ModulesRxCurrentSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules rx current"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_rx_current"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("rx", {})
+                .get("current", None)
+        )
+
+class S_ModulesRxTankSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules rx tank"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_rx_tank"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("rx", {})
+                .get("tank", None)
+        )
+
+class S_ModulesRxStatusValueSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules rx status.value"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_rx_status_value"
+
+    @property
+    def native_value(self):
+        status = (
+            self.coordinator.data.get("modules", {})
+                .get("rx", {})
+                .get("status", {})
+        )
+        return status.get("value", None)
+
+
+#
+# modules.ph
+#
+class S_ModulesPhTypeSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph type"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_type"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("type", None)
+        )
+
+class S_ModulesPhTankSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph tank"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_tank"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("tank", None)
+        )
+
+class S_ModulesPhCurrentSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph current"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_current"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("current", None)
+        )
+
+class S_ModulesPhPumpHighOnSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph pump_high_on"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_pump_high_on"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("pump_high_on", None)
+        )
+
+class S_ModulesPhStatusHighValueSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph status.high_value"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_status_high_value"
+
+    @property
+    def native_value(self):
+        stat = (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("status", {})
+        )
+        return stat.get("high_value", None)
+
+class S_ModulesPhStatusLowValueSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph status.low_value"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_status_low_value"
+
+    @property
+    def native_value(self):
+        stat = (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("status", {})
+        )
+        return stat.get("low_value", None)
+
+class S_ModulesPhAl3Sensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph al3"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_al3"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("al3", None)
+        )
+
+class S_ModulesPhPumpLowOnSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules ph pump_low_on"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_ph_pump_low_on"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("ph", {})
+                .get("pump_low_on", None)
+        )
+
+#
+# modules.cl
+#
+class S_ModulesClPumpStatusSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cl pump_status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cl_pump_status"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("cl", {})
+                .get("pump_status", None)
+        )
+
+class S_ModulesClCurrentSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cl current"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cl_current"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("cl", {})
+                .get("current", None)
+        )
+
+class S_ModulesClStatusValueSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cl status.value"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cl_status_value"
+
+    @property
+    def native_value(self):
+        stat = (
+            self.coordinator.data.get("modules", {})
+                .get("cl", {})
+                .get("status", {})
+        )
+        return stat.get("value", None)
+
+class S_ModulesClTankSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cl tank"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cl_tank"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("cl", {})
+                .get("tank", None)
+        )
+
+#
+# modules.cd
+#
+class S_ModulesCdCurrentSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cd current"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cd_current"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("cd", {})
+                .get("current", None)
+        )
+
+class S_ModulesCdStatusValueSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cd status.value"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cd_status_value"
+
+    @property
+    def native_value(self):
+        stat = (
+            self.coordinator.data.get("modules", {})
+                .get("cd", {})
+                .get("status", {})
+        )
+        return stat.get("value", None)
+
+class S_ModulesCdTankSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules cd tank"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_cd_tank"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("cd", {})
+                .get("tank", None)
+        )
+
+#
+# modules.uv
+#
+class S_ModulesUvTotalSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules uv total"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_uv_total"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("uv", {})
+                .get("total", None)
+        )
+
+class S_ModulesUvPartialSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules uv partial"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_uv_partial"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("uv", {})
+                .get("partial", None)
+        )
+
+class S_ModulesUvStatusSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules uv status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_uv_status"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("uv", {})
+                .get("status", None)
+        )
+
+#
+# modules.io
+#
+class S_ModulesIoActivationSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules io activation"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_io_activation"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("io", {})
+                .get("activation", None)
+        )
+
+class S_ModulesIoStatusSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules io status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_io_status"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("io", {})
+                .get("status", None)
+        )
+
+class S_ModulesIoLevelSensor(S_ModulesSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Modules io level"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_modules_io_level"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("modules", {})
+                .get("io", {})
+                .get("level", None)
+        )
 
 #
 # --------------- RELAYS ---------------
 #
+
 class S_RelaysSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, f"{self.coordinator.api._pool_id}_relays")},
+            "identifiers": {(DOMAIN, f'{self.coordinator.api._pool_id}_relays')},
             "name": "Relays",
             "manufacturer": "Vistapool",
             "model": "Vistapool Controller"
         }
-
 
 class S_RelaysFiltrationHeatingStatusSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
@@ -882,7 +1715,6 @@ class S_RelaysFiltrationHeatingStatusSensor(S_RelaysSensorBase):
                 .get("status", None)
         )
 
-
 class S_RelaysFiltrationHeatingGpioSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -898,7 +1730,6 @@ class S_RelaysFiltrationHeatingGpioSensor(S_RelaysSensorBase):
                 .get("gpio", None)
         )
 
-
 class S_RelaysFiltrationGpioSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -913,12 +1744,134 @@ class S_RelaysFiltrationGpioSensor(S_RelaysSensorBase):
                 .get("gpio", None)
         )
 
-# ... etc for backwash, i.e. S_RelaysBackwashGpioSensor, etc.
+class S_RelaysBackwashGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays Backwash GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_backwash_gpio"
 
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("backwash", {})
+                .get("gpio", None)
+        )
 
-#
-# =============== RELAYS RELAY4 EXAMPLE ================
-#
+class S_RelaysIoGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays IO GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_io_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("io", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysRxGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays RX GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_rx_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("rx", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysLightGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays Light GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_light_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("light", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysClGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays Cl GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_cl_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("cl", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysCdGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays Cd GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_cd_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("cd", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysPhAcidGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays pH acid GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_ph_acid_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("ph", {})
+                .get("acid", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysPhBaseGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays pH base GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_ph_base_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("ph", {})
+                .get("base", {})
+                .get("gpio", None)
+        )
+
+class S_RelaysUvGpioSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relays UV GPIO"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_uv_gpio"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("uv", {})
+                .get("gpio", None)
+        )
+
 class S_RelaysRelay4NameSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -963,11 +1916,232 @@ class S_RelaysRelay4InfoDelaySensor(S_RelaysSensorBase):
         )
         return info.get("delay", None)
 
-# etc. voor de rest van relay4.info.* velden
+class S_RelaysRelay4InfoOnOffSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info onoff"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_onoff"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("onoff", None)
+
+class S_RelaysRelay4InfoFreq2Sensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info freq2"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_freq2"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("freq2", None)
+
+class S_RelaysRelay4InfoManAutoTempSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info manAutoTemp"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_manAutoTemp"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("manAutoTemp", None)
+
+class S_RelaysRelay4InfoSignalSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info signal"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_signal"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("signal", None)
+
+class S_RelaysRelay4InfoFrom2Sensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info from2"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_from2"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("from2", None)
+
+class S_RelaysRelay4InfoPolaritySensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info polarity"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_polarity"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("polarity", None)
+
+class S_RelaysRelay4InfoStatusSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info status"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_status"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("status", None)
+
+class S_RelaysRelay4InfoFreqSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info freq"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_freq"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("freq", None)
+
+class S_RelaysRelay4InfoToSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info to"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_to"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("to", None)
+
+class S_RelaysRelay4InfoTo2Sensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info to2"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_to2"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("to2", None)
+
+class S_RelaysRelay4InfoTiempoOnSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info tiempoOn"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_tiempoOn"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("tiempoOn", None)
+
+class S_RelaysRelay4InfoKeySensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay4 Info key"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay4_info_key"
+
+    @property
+    def native_value(self):
+        info = (
+            self.coordinator.data.get("relays", {})
+                .get("relay4", {})
+                .get("info", {})
+        )
+        return info.get("key", None)
+
+class S_RelaysRelay1NameSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay1 Name"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay1_name"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("relay1", {})
+                .get("name", None)
+        )
+
+class S_RelaysRelay2NameSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay2 Name"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay2_name"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("relay2", {})
+                .get("name", None)
+        )
+
+class S_RelaysRelay3NameSensor(S_RelaysSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Relay3 Name"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_relay3_name"
+
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.get("relays", {})
+                .get("relay3", {})
+                .get("name", None)
+        )
 
 #
-# =============== FORM KEYS ================
+# ============ FORM KEYS ============
 #
+
 class S_FormSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
@@ -998,5 +2172,52 @@ class S_FormCountrySensor(S_FormSensorBase):
     def native_value(self):
         return self.coordinator.data.get("form", {}).get("country", None)
 
-# etc. herhaal voor city, name, zipcode, lat, street
+class S_FormCitySensor(S_FormSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Form city"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_city"
 
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("form", {}).get("city", None)
+
+class S_FormNameSensor(S_FormSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Form name"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_name"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("form", {}).get("name", None)
+
+class S_FormZipcodeSensor(S_FormSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Form zipcode"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_zipcode"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("form", {}).get("zipcode", None)
+
+class S_FormLatSensor(S_FormSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Form lat"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_lat"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("form", {}).get("lat", None)
+
+class S_FormStreetSensor(S_FormSensorBase):
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Form street"
+        self._attr_unique_id = f"s_{coordinator.api._pool_id}_form_street"
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("form", {}).get("street", None)
