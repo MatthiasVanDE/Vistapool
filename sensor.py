@@ -115,3 +115,24 @@ class VistapoolPresentSensor(CoordinatorEntity, SensorEntity):
             "manufacturer": "Sugar Valley",
             "model": "Oxilife",
         }
+
+class VistapoolUpdatedAtSensor(CoordinatorEntity, SensorEntity):
+    """Toont apparaatstatus (present)."""
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = "Apparaat online (true/false)"
+        self._attr_unique_id = f"{coordinator.api._pool_id}_present"
+
+    @property
+    def native_value(self):
+        data = self.coordinator.data
+        return data.get("present", None)
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, "pool_device")},
+            "name": "Pool",
+            "manufacturer": "Sugar Valley",
+            "model": "Oxilife",
+        }
