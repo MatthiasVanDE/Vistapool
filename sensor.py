@@ -512,7 +512,8 @@ class S_BackwashStartAtSensor(S_BackwashSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("backwash", {}).get("startAt", None)
+        value = self.coordinator.data.get("backwash", {}).get("startAt", None)
+        return datetime.fromtimestamp(value)
 
 #
 # --------------- LIGHT ---------------
@@ -567,7 +568,8 @@ class S_LightFromSensor(S_LightSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("light", {}).get("from", None)
+        value = self.coordinator.data.get("light", {}).get("from", None)
+        return datetime.fromtimestamp(value)
 
 class S_LightStatusSensor(S_LightSensorBase):
     def __init__(self, coordinator):
@@ -807,12 +809,12 @@ class S_FiltrationInterval1FromSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("interval1", {})
                 .get("from", None)
         )
-
+        return datetime.fromtimestamp(value)
 
 
 class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
@@ -823,12 +825,12 @@ class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("interval1", {})
                 .get("to", None)
         )
-
+        return datetime.fromtimestamp(value)
 
 class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -838,11 +840,12 @@ class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("interval2", {})
                 .get("from", None)
         )
+        return datetime.fromtimestamp(value)
 
 class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -852,11 +855,12 @@ class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("interval2", {})
                 .get("to", None)
         )
+        return datetime.fromtimestamp(value)
 
 class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -866,11 +870,12 @@ class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("interval3", {})
                 .get("from", None)
         )
+        return datetime.fromtimestamp(value)
 
 class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -880,11 +885,12 @@ class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("interval3", {})
                 .get("to", None)
         )
+        return datetime.fromtimestamp(value)
 
 class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -894,11 +900,12 @@ class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.get("filtration", {})
                 .get("intel", {})
                 .get("time", None)
         )
+        return datetime.fromtimestamp(value)
 
 class S_FiltrationIntelTempSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -1339,7 +1346,8 @@ class S_MainLocalTimeSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("localTime", None)
+        value =  self.coordinator.data.get("main", {}).get("localTime", None)
+        return datetime.fromtimestamp(value)
 
 class S_MainHasLinkedSensor(S_MainSensorBase):
     def __init__(self, coordinator):
