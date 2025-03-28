@@ -10,15 +10,15 @@ _LOGGER = logging.getLogger(__name__)
 # =================== Mapping Tables ===================
 #
 FILTRATION_MODE_MAP = {
-    "manual": 0,
-    "auto": 1,
-    "smart": 3
+    "Manual": 0,
+    "Auto": 1,
+    "Smart": 3
 }
 FILTRATION_MODE_NAMES = {v: k for k, v in FILTRATION_MODE_MAP.items()}
 
 BACKWASH_MODE_MAP = {
-    "manual": 0,
-    "automatic": 1
+    "Manual": 0,
+    "Automatic": 1
 }
 BACKWASH_MODE_NAMES = {v: k for k, v in BACKWASH_MODE_MAP.items()}
 
@@ -26,9 +26,9 @@ BACKWASH_MODE_NAMES = {v: k for k, v in BACKWASH_MODE_MAP.items()}
 # Pomp-snelheid: "langzaam"=0, "medium"=1, "hoog"=2 (voor filtration.manVel)
 #
 PUMP_SPEED_MAP = {
-    "langzaam": 0,
-    "medium": 1,
-    "hoog": 2
+    "Slow": 0,
+    "Medium": 1,
+    "High": 2
 }
 PUMP_SPEED_NAMES = {v: k for k, v in PUMP_SPEED_MAP.items()}
 

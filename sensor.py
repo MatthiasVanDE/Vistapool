@@ -3,6 +3,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.const import UnitOfTemperature
 from .const import DOMAIN
+from datetime import datetime
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -10,33 +11,33 @@ _LOGGER = logging.getLogger(__name__)
 # =================== Mapping Tables ===================
 #
 FILTRATION_MODE_MAP = {
-    "manual": 0,
-    "auto": 1,
-    "smart": 3
+    "Manual": 0,
+    "Auto": 1,
+    "Smart": 3
 }
 FILTRATION_MODE_NAMES = {v: k for k, v in FILTRATION_MODE_MAP.items()}
 
 BACKWASH_MODE_MAP = {
-    "manual": 0,
-    "automatic": 1
+    "Manual": 0,
+    "Automatic": 1
 }
 BACKWASH_MODE_NAMES = {v: k for k, v in BACKWASH_MODE_MAP.items()}
 
 FILTRATION_STATUS_MAP = {
-    "off": 0,
-    "on": 1
+    "Off": 0,
+    "On": 1
 }
 FILTRATION_STATUS_NAMES = {v: k for k, v in FILTRATION_STATUS_MAP.items()}
 
 BACKWASH_STATUS_MAP = {
-    "off": 0,
-    "on": 1
+    "Off": 0,
+    "On": 1
 }
 BACKWASH_STATUS_NAMES = {v: k for k, v in BACKWASH_STATUS_MAP.items()}
 
 TRUE_FALSE_MAP = {
-    "false": 0,
-    "true": 1
+    "False": 0,
+    "True": 1
 }
 TRUE_FALSE_NAMES = {v: k for k, v in TRUE_FALSE_MAP.items()}
 
@@ -412,8 +413,8 @@ class S_GlobalUpdatedAtSensor(S_GlobalSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("updatedAt", None)
-
+        value = self.coordinator.data.get("updatedAt", None)
+        return datetime.fromtimestamp(value)
 
 class S_GlobalCreatedAtSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
@@ -423,8 +424,8 @@ class S_GlobalCreatedAtSensor(S_GlobalSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("createdAt", None)
-
+        value = self.coordinator.data.get("createdAt", None)
+        return datetime.fromtimestamp(value)
 
 class S_GlobalPresentSensor(S_GlobalSensorBase):
     def __init__(self, coordinator):
