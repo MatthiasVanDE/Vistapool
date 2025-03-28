@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94c6294b-2c2d-4dcf-a9d1-d5540bd56cb9" name="Changes" comment="Fix error in sensor.py">
+    <list default="true" id="94c6294b-2c2d-4dcf-a9d1-d5540bd56cb9" name="Changes" comment="Fixed selects">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/select.py" beforeDir="false" afterPath="$PROJECT_DIR$/select.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/number.py" beforeDir="false" afterPath="$PROJECT_DIR$/number.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/sensor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +147,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743097591262</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Fixed selects">
+      <option name="closed" value="true" />
+      <created>1743100818104</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1743100818104</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -167,6 +176,7 @@
     <MESSAGE value="Added all sensors, switches, numbers and selects" />
     <MESSAGE value="Fix error in number.py" />
     <MESSAGE value="Fix error in sensor.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix error in sensor.py" />
+    <MESSAGE value="Fixed selects" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed selects" />
   </component>
 </project>

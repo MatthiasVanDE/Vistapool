@@ -6,6 +6,30 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+#
+# =================== Mapping Tables ===================
+#
+FILTRATION_MODE_MAP = {
+    "manual": 0,
+    "auto": 1,
+    "smart": 3
+}
+FILTRATION_MODE_NAMES = {v: k for k, v in FILTRATION_MODE_MAP.items()}
+
+BACKWASH_MODE_MAP = {
+    "manual": 0,
+    "automatic": 1
+}
+BACKWASH_MODE_NAMES = {v: k for k, v in BACKWASH_MODE_MAP.items()}
+
+
+
+
+def _seconds_to_hhmm(seconds: int) -> str:
+    """Zet seconden (vanaf middernacht) om in 'HH:MM'."""
+    h = seconds // 3600
+    m = (seconds % 3600) // 60
+    return f"{h:02d}:{m:02d}"
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up a sensor for every single JSON field, grouped by category."""
@@ -429,7 +453,8 @@ class S_BackwashModeSensor(S_BackwashSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("backwash", {}).get("mode", None)
+        value = self.coordinator.data.get("backwash", {}).get("mode", None)
+        return BACKWASH_MODE_NAMES.get(value, "unknown")
 
 class S_BackwashRemainingTimeSensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
@@ -769,6 +794,8 @@ class S_FiltrationInterval1FromSensor(S_FiltrationSensorBase):
                 .get("from", None)
         )
 
+
+
 class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -782,6 +809,7 @@ class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
                 .get("interval1", {})
                 .get("to", None)
         )
+
 
 class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):

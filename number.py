@@ -1,9 +1,24 @@
 import logging
+import copy
 from homeassistant.components.number import NumberEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
+
+#
+# Hulpfuncties om HH:MM ←→ seconden te converteren
+#
+
+def hhmm_to_seconds(hhmm: str) -> int:
+    """Parse 'HH:MM' naar integer seconden."""
+    parts = hhmm.split(":")
+    if len(parts) != 2:
+        return 0
+    h = int(parts[0])
+    m = int(parts[1])
+    return h * 3600 + m * 60
+
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up all number entities for this integration."""
@@ -45,6 +60,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     async_add_entities(numbers)
 
+
 #
 # --------------------------------------------------------------------------
 #  DEVICE BASE CLASSES
@@ -63,7 +79,6 @@ class SetPointsNumberBase(CoordinatorEntity, NumberEntity):
             "model": "Vistapool Controller"
         }
 
-
 class HydrolyseNumberBase(CoordinatorEntity, NumberEntity):
     """Alle 'Hydrolyse' getallen komen onder hetzelfde device_info."""
 
@@ -75,7 +90,6 @@ class HydrolyseNumberBase(CoordinatorEntity, NumberEntity):
             "manufacturer": "Vistapool",
             "model": "Vistapool Controller"
         }
-
 
 class FiltrationNumberBase(CoordinatorEntity, NumberEntity):
     """Alle 'Filtratie' (en Backwash) getallen komen onder hetzelfde device_info."""
@@ -204,7 +218,6 @@ class VistapoolHydrolyseLevelNumber(HydrolyseNumberBase):
         return float(level) / 10.0
 
     async def async_set_native_value(self, value: float) -> None:
-        # Optional guard: if 'disable=1', we might not want to allow changes
         hidro = self.coordinator.data.get("hidro", {})
         if hidro.get("disable", 1) == 1:
             _LOGGER.warning("Hydrolyse is disabled; ignoring level change.")
@@ -242,13 +255,10 @@ class VistapoolHydrolyseReductionNumber(HydrolyseNumberBase):
 
     @property
     def available(self):
-        """Only show if cover_enabled=1."""
-        data = self.coordinator.data
-        cover_enabled = data.get("hidro", {}).get("cover_enabled", 0)
+        cover_enabled = self.coordinator.data.get("hidro", {}).get("cover_enabled", 0)
         return cover_enabled == 1
 
     async def async_set_native_value(self, value: float) -> None:
-        # Guard: only allow if cover_enabled=1
         hidro = self.coordinator.data.get("hidro", {})
         if hidro.get("cover_enabled", 0) != 1:
             _LOGGER.warning("Reduction only valid when cover_enabled=1.")
@@ -286,18 +296,15 @@ class VistapoolWaterTempSetpointNumber(FiltrationNumberBase):
     @property
     def native_value(self):
         data = self.coordinator.data
-        val = (
-            data.get("filtration", {})
-                .get("intel", {})
-                .get("temp", 28)
-        )
+        val = data.get("filtration", {}).get("intel", {}).get("temp", 28)
         return float(val)
 
     async def async_set_native_value(self, value: float) -> None:
+        val_int = int(round(value))
         changes = {
             "filtration": {
                 "intel": {
-                    "temp": int(value)
+                    "temp": val_int
                 }
             }
         }
@@ -322,16 +329,14 @@ class VistapoolSmartTempMinNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
+            self.coordinator.data.get("filtration", {})
                 .get("smart", {})
                 .get("tempMin", 10)
         )
 
     @property
     def available(self):
-        """Only relevant if mode=3 (SMART)."""
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         return mode == 3
 
@@ -370,16 +375,14 @@ class VistapoolSmartTempHighNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
+            self.coordinator.data.get("filtration", {})
                 .get("smart", {})
                 .get("tempHigh", 25)
         )
 
     @property
     def available(self):
-        """Only relevant if mode=3 (SMART)."""
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         return mode == 3
 
@@ -406,14 +409,14 @@ class VistapoolSmartTempHighNumber(FiltrationNumberBase):
 
 
 #
-#  Intervals 1..3 (from/to)
+#  Intervals 1..3 (from/to) – bewaard in seconden
 #
 class VistapoolFiltrationInterval1FromNumber(FiltrationNumberBase):
-    """filtration.interval1.from in seconds (0..86400)."""
+    """filtration.interval1.from in seconds (0..86400). Displayed as a plain integer in HA."""
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Interval1 From"
+        self._attr_name = "Interval1 From (sec)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_interval1_from"
         self._attr_min_value = 0
         self._attr_max_value = 86400
@@ -421,31 +424,30 @@ class VistapoolFiltrationInterval1FromNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
+            self.coordinator.data.get("filtration", {})
                 .get("interval1", {})
                 .get("from", 0)
         )
 
     @property
     def available(self):
-        """Only relevant if mode=1 (AUTO) or 3 (SMART)."""
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         return mode in [1, 3]
 
     async def async_set_native_value(self, value: float) -> None:
+        val_int = int(round(value))
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         if mode not in [1, 3]:
             _LOGGER.warning("Interval1.from only relevant if mode=Auto(1) or Smart(3).")
             return
 
-        val_int = int(round(value))
+        # Kopieer de bestaande filtration.interval1
+        base = copy.deepcopy(self.coordinator.data.get("filtration", {}).get("interval1", {}))
+        base["from"] = val_int
         changes = {
             "filtration": {
-                "interval1": {
-                    "from": val_int
-                }
+                "interval1": base
             }
         }
         await self.hass.async_add_executor_job(
@@ -461,7 +463,7 @@ class VistapoolFiltrationInterval1ToNumber(FiltrationNumberBase):
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Interval1 To"
+        self._attr_name = "Interval1 To (sec)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_interval1_to"
         self._attr_min_value = 0
         self._attr_max_value = 86400
@@ -469,9 +471,8 @@ class VistapoolFiltrationInterval1ToNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
+            self.coordinator.data.get("filtration", {})
                 .get("interval1", {})
                 .get("to", 0)
         )
@@ -482,17 +483,18 @@ class VistapoolFiltrationInterval1ToNumber(FiltrationNumberBase):
         return mode in [1, 3]
 
     async def async_set_native_value(self, value: float) -> None:
+        val_int = int(round(value))
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         if mode not in [1, 3]:
             _LOGGER.warning("Interval1.to only relevant if mode=Auto(1) or Smart(3).")
             return
 
-        val_int = int(round(value))
+        base = copy.deepcopy(self.coordinator.data.get("filtration", {}).get("interval1", {}))
+        base["to"] = val_int
+
         changes = {
             "filtration": {
-                "interval1": {
-                    "to": val_int
-                }
+                "interval1": base
             }
         }
         await self.hass.async_add_executor_job(
@@ -502,13 +504,14 @@ class VistapoolFiltrationInterval1ToNumber(FiltrationNumberBase):
         )
         await self.coordinator.async_request_refresh()
 
+# Interval2From, Interval2To, Interval3From, Interval3To werken identiek, alleen index verschilt
 
 class VistapoolFiltrationInterval2FromNumber(FiltrationNumberBase):
     """filtration.interval2.from in seconds (0..86400)."""
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Interval2 From"
+        self._attr_name = "Interval2 From (sec)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_interval2_from"
         self._attr_min_value = 0
         self._attr_max_value = 86400
@@ -516,11 +519,8 @@ class VistapoolFiltrationInterval2FromNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
-                .get("interval2", {})
-                .get("from", 0)
+            self.coordinator.data.get("filtration", {}).get("interval2", {}).get("from", 0)
         )
 
     @property
@@ -529,17 +529,18 @@ class VistapoolFiltrationInterval2FromNumber(FiltrationNumberBase):
         return mode in [1, 3]
 
     async def async_set_native_value(self, value: float) -> None:
+        val_int = int(round(value))
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         if mode not in [1, 3]:
             _LOGGER.warning("Interval2.from only relevant if mode=Auto(1) or Smart(3).")
             return
 
-        val_int = int(round(value))
+        base = copy.deepcopy(self.coordinator.data.get("filtration", {}).get("interval2", {}))
+        base["from"] = val_int
+
         changes = {
             "filtration": {
-                "interval2": {
-                    "from": val_int
-                }
+                "interval2": base
             }
         }
         await self.hass.async_add_executor_job(
@@ -555,7 +556,7 @@ class VistapoolFiltrationInterval2ToNumber(FiltrationNumberBase):
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Interval2 To"
+        self._attr_name = "Interval2 To (sec)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_interval2_to"
         self._attr_min_value = 0
         self._attr_max_value = 86400
@@ -563,11 +564,8 @@ class VistapoolFiltrationInterval2ToNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
-                .get("interval2", {})
-                .get("to", 0)
+            self.coordinator.data.get("filtration", {}).get("interval2", {}).get("to", 0)
         )
 
     @property
@@ -576,17 +574,18 @@ class VistapoolFiltrationInterval2ToNumber(FiltrationNumberBase):
         return mode in [1, 3]
 
     async def async_set_native_value(self, value: float) -> None:
+        val_int = int(round(value))
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         if mode not in [1, 3]:
             _LOGGER.warning("Interval2.to only relevant if mode=Auto(1) or Smart(3).")
             return
 
-        val_int = int(round(value))
+        base = copy.deepcopy(self.coordinator.data.get("filtration", {}).get("interval2", {}))
+        base["to"] = val_int
+
         changes = {
             "filtration": {
-                "interval2": {
-                    "to": val_int
-                }
+                "interval2": base
             }
         }
         await self.hass.async_add_executor_job(
@@ -602,7 +601,7 @@ class VistapoolFiltrationInterval3FromNumber(FiltrationNumberBase):
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Interval3 From"
+        self._attr_name = "Interval3 From (sec)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_interval3_from"
         self._attr_min_value = 0
         self._attr_max_value = 86400
@@ -610,11 +609,8 @@ class VistapoolFiltrationInterval3FromNumber(FiltrationNumberBase):
 
     @property
     def native_value(self):
-        data = self.coordinator.data
         return float(
-            data.get("filtration", {})
-                .get("interval3", {})
-                .get("from", 0)
+            self.coordinator.data.get("filtration", {}).get("interval3", {}).get("from", 0)
         )
 
     @property
@@ -623,17 +619,18 @@ class VistapoolFiltrationInterval3FromNumber(FiltrationNumberBase):
         return mode in [1, 3]
 
     async def async_set_native_value(self, value: float) -> None:
+        val_int = int(round(value))
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         if mode not in [1, 3]:
             _LOGGER.warning("Interval3.from only relevant if mode=Auto(1) or Smart(3).")
             return
 
-        val_int = int(round(value))
+        base = copy.deepcopy(self.coordinator.data.get("filtration", {}).get("interval3", {}))
+        base["from"] = val_int
+
         changes = {
             "filtration": {
-                "interval3": {
-                    "from": val_int
-                }
+                "interval3": base
             }
         }
         await self.hass.async_add_executor_job(
@@ -649,39 +646,36 @@ class VistapoolFiltrationInterval3ToNumber(FiltrationNumberBase):
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Interval3 To"
+        self._attr_name = "Interval3 To (sec)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_interval3_to"
         self._attr_min_value = 0
         self._attr_max_value = 86400
         self._attr_step = 60
 
     @property
-    def native_value(self):
-        data = self.coordinator.data
-        return float(
-            data.get("filtration", {})
-                .get("interval3", {})
-                .get("to", 0)
-        )
-
-    @property
     def available(self):
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         return mode in [1, 3]
 
+    @property
+    def native_value(self):
+        return float(
+            self.coordinator.data.get("filtration", {}).get("interval3", {}).get("to", 0)
+        )
+
     async def async_set_native_value(self, value: float) -> None:
-        # CORRECTED: string properly closed
         val_int = int(round(value))
         mode = self.coordinator.data.get("filtration", {}).get("mode", 0)
         if mode not in [1, 3]:
             _LOGGER.warning("Interval3.to only relevant if mode=Auto(1) or Smart(3).")
             return
 
+        base = copy.deepcopy(self.coordinator.data.get("filtration", {}).get("interval3", {}))
+        base["to"] = val_int
+
         changes = {
             "filtration": {
-                "interval3": {
-                    "to": val_int
-                }
+                "interval3": base
             }
         }
         await self.hass.async_add_executor_job(
@@ -733,8 +727,8 @@ class VistapoolBackwashFrequencyNumber(FiltrationNumberBase):
         super().__init__(coordinator)
         self._attr_name = "Backwash Frequency (min)"
         self._attr_unique_id = f"{coordinator.api._pool_id}_backwash_frequency"
-        self._attr_min_value = 1440  # 1 day in minutes
-        self._attr_max_value = 1000000
+        self._attr_min_value = 1440
+        self._attr_max_value = 999999
         self._attr_step = 60
 
     @property
@@ -744,8 +738,7 @@ class VistapoolBackwashFrequencyNumber(FiltrationNumberBase):
 
     @property
     def available(self):
-        mode = self.coordinator.data.get("backwash", {}).get("mode", 0)
-        return mode == 1
+        return self.coordinator.data.get("backwash", {}).get("mode", 0) == 1
 
     async def async_set_native_value(self, value: float) -> None:
         mode = self.coordinator.data.get("backwash", {}).get("mode", 0)
@@ -785,16 +778,15 @@ class VistapoolBackwashStartAtNumber(FiltrationNumberBase):
 
     @property
     def available(self):
-        mode = self.coordinator.data.get("backwash", {}).get("mode", 0)
-        return mode == 1
+        return self.coordinator.data.get("backwash", {}).get("mode", 0) == 1
 
     async def async_set_native_value(self, value: float) -> None:
-        val_int = int(round(value))
         mode = self.coordinator.data.get("backwash", {}).get("mode", 0)
         if mode != 1:
             _LOGGER.warning("Backwash startAt only relevant in backwash.mode=1 (auto).")
             return
 
+        val_int = int(round(value))
         changes = {
             "backwash": {
                 "startAt": val_int
