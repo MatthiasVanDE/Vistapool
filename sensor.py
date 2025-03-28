@@ -22,7 +22,23 @@ BACKWASH_MODE_MAP = {
 }
 BACKWASH_MODE_NAMES = {v: k for k, v in BACKWASH_MODE_MAP.items()}
 
+FILTRATION_STATUS_MAP = {
+    "off": 0,
+    "on": 1
+}
+FILTRATION_STATUS_NAMES = {v: k for k, v in FILTRATION_STATUS_MAP.items()}
 
+BACKWASH_STATUS_MAP = {
+    "off": 0,
+    "on": 1
+}
+BACKWASH_STATUS_NAMES = {v: k for k, v in BACKWASH_STATUS_MAP.items()}
+
+TRUE_FALSE_MAP = {
+    "false": 0,
+    "true": 1
+}
+TRUE_FALSE_NAMES = {v: k for k, v in TRUE_FALSE_MAP.items()}
 
 
 def _seconds_to_hhmm(seconds: int) -> str:
@@ -474,7 +490,8 @@ class S_BackwashStatusSensor(S_BackwashSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("backwash", {}).get("status", None)
+        value = self.coordinator.data.get("backwash", {}).get("status", None)
+        return BACKWASH_STATUS_NAMES.get(value, "unknown")
 
 class S_BackwashFrequencySensor(S_BackwashSensorBase):
     def __init__(self, coordinator):
@@ -644,7 +661,8 @@ class S_HidroHasHidroControlSensor(S_HydrolyseSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("hidro", {}).get("hasHidroControl", None)
+        value = self.coordinator.data.get("hidro", {}).get("hasHidroControl", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_HidroCoverSensor(S_HydrolyseSensorBase):
     def __init__(self, coordinator):
@@ -913,7 +931,8 @@ class S_FiltrationHasSmartSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}).get("hasSmart", None)
+        value = self.coordinator.data.get("filtration", {}).get("hasSmart", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_FiltrationHeatingTempSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -975,7 +994,8 @@ class S_FiltrationHasHeatSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}).get("hasHeat", None)
+        value = self.coordinator.data.get("filtration", {}).get("hasHeat", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_FiltrationPumpTypeSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -1005,7 +1025,8 @@ class S_FiltrationStatusSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}).get("status", None)
+        value = self.coordinator.data.get("filtration", {}).get("status", None)
+        return FILTRATION_STATUS_NAMES.get(value, "unknown")
 
 class S_FiltrationTimerVel1Sensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -1025,7 +1046,8 @@ class S_FiltrationModeSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("filtration", {}).get("mode", None)
+        value = self.coordinator.data.get("filtration", {}).get("mode", None)
+        return FILTRATION_MODE_NAMES.get(value, "unknown")
 
 class S_FiltrationSmartTempMinSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -1093,7 +1115,8 @@ class S_MainHasIOSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasIO", None)
+        value = self.coordinator.data.get("main", {}).get("hasIO", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 # De rest van alle main.* keys (hasUV, RSSI, hasLED, LEDPulse, etc.):
 
@@ -1115,7 +1138,8 @@ class S_MainHasUVSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasUV", None)
+        value = self.coordinator.data.get("main", {}).get("hasUV", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainRSSISensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1135,7 +1159,8 @@ class S_MainHasLEDSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasLED", None)
+        value = self.coordinator.data.get("main", {}).get("hasLED", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainLEDPulseSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1155,7 +1180,8 @@ class S_MainHasLinkedAutoSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasLinkedAuto", None)
+        value = self.coordinator.data.get("main", {}).get("hasLinkedAuto", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHideTemperatureSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1215,7 +1241,8 @@ class S_MainHasPHSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasPH", None)
+        value = self.coordinator.data.get("main", {}).get("hasPH", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHasBackwashSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1225,7 +1252,8 @@ class S_MainHasBackwashSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasBackwash", None)
+        value = self.coordinator.data.get("main", {}).get("hasBackwash", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHasWifiSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1235,7 +1263,8 @@ class S_MainHasWifiSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasWifi", None)
+        value = self.coordinator.data.get("main", {}).get("hasWifi", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHasCDSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1245,7 +1274,8 @@ class S_MainHasCDSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasCD", None)
+        value = self.coordinator.data.get("main", {}).get("hasCD", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHideFiltrationSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1265,7 +1295,8 @@ class S_MainHasCLSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasCL", None)
+        value = self.coordinator.data.get("main", {}).get("hasCL", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHasRXSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1275,7 +1306,8 @@ class S_MainHasRXSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasRX", None)
+        value = self.coordinator.data.get("main", {}).get("hasRX", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainTemperatureSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1316,7 +1348,8 @@ class S_MainHasLinkedSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasLinked", None)
+        value = self.coordinator.data.get("main", {}).get("hasLinked", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 class S_MainHasHidroSensor(S_MainSensorBase):
     def __init__(self, coordinator):
@@ -1326,7 +1359,8 @@ class S_MainHasHidroSensor(S_MainSensorBase):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get("main", {}).get("hasHidro", None)
+        value = self.coordinator.data.get("main", {}).get("hasHidro", None)
+        return TRUE_FALSE_NAMES.get(value, "unknown")
 
 #
 # --------------- MODULES ---------------
