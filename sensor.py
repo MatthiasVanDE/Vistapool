@@ -814,7 +814,7 @@ class S_FiltrationInterval1FromSensor(S_FiltrationSensorBase):
                 .get("interval1", {})
                 .get("from", None)
         )
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 
 class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
@@ -830,7 +830,7 @@ class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
                 .get("interval1", {})
                 .get("to", None)
         )
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -845,7 +845,7 @@ class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
                 .get("interval2", {})
                 .get("from", None)
         )
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -860,7 +860,7 @@ class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
                 .get("interval2", {})
                 .get("to", None)
         )
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -875,7 +875,7 @@ class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
                 .get("interval3", {})
                 .get("from", None)
         )
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -890,7 +890,7 @@ class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
                 .get("interval3", {})
                 .get("to", None)
         )
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
