@@ -3,7 +3,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.const import UnitOfTemperature
 from .const import DOMAIN
-from datetime import datetime
+from datetime import datetime, timezone
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,11 +42,9 @@ TRUE_FALSE_MAP = {
 TRUE_FALSE_NAMES = {v: k for k, v in TRUE_FALSE_MAP.items()}
 
 
-def _seconds_to_hhmm(seconds: int) -> str:
-    """Zet seconden (vanaf middernacht) om in 'HH:MM'."""
-    h = seconds // 3600
-    m = (seconds % 3600) // 60
-    return f"{h:02d}:{m:02d}"
+def intervalTime(value):
+    return datetime.fromtimestamp(value, tz=timezone.utc).strftime("%H:%M:%S")
+
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up a sensor for every single JSON field, grouped by category."""
@@ -814,7 +812,7 @@ class S_FiltrationInterval1FromSensor(S_FiltrationSensorBase):
                 .get("interval1", {})
                 .get("from", None)
         )
-        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
+        return intervalTime(value)
 
 
 class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
@@ -830,7 +828,7 @@ class S_FiltrationInterval1ToSensor(S_FiltrationSensorBase):
                 .get("interval1", {})
                 .get("to", None)
         )
-        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
+        return intervalTime(value)
 
 class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -845,7 +843,7 @@ class S_FiltrationInterval2FromSensor(S_FiltrationSensorBase):
                 .get("interval2", {})
                 .get("from", None)
         )
-        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
+        return intervalTime(value)
 
 class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -860,7 +858,7 @@ class S_FiltrationInterval2ToSensor(S_FiltrationSensorBase):
                 .get("interval2", {})
                 .get("to", None)
         )
-        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
+        return intervalTime(value)
 
 class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -875,7 +873,7 @@ class S_FiltrationInterval3FromSensor(S_FiltrationSensorBase):
                 .get("interval3", {})
                 .get("from", None)
         )
-        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
+        return intervalTime(value)
 
 class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -890,7 +888,7 @@ class S_FiltrationInterval3ToSensor(S_FiltrationSensorBase):
                 .get("interval3", {})
                 .get("to", None)
         )
-        return datetime.fromtimestamp(value).strftime("%H:%M:%S")
+        return intervalTime(value)
 
 class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
@@ -905,7 +903,7 @@ class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
                 .get("intel", {})
                 .get("time", None)
         )
-        return datetime.fromtimestamp(value)
+        return intervalTime(value)
 
 class S_FiltrationIntelTempSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
