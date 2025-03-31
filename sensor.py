@@ -928,12 +928,12 @@ class S_FiltrationIntelTimeSensor(S_FiltrationSensorBase):
 
     @property
     def native_value(self):
-        value = (
+        return (
             self.coordinator.data.get("filtration", {})
                 .get("intel", {})
                 .get("time", None)
         )
-        return intervalTime(value)
+
 
 class S_FiltrationIntelTempSensor(S_FiltrationSensorBase):
     def __init__(self, coordinator):
