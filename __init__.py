@@ -6,6 +6,9 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN, PLATFORMS
 from .coordinator import VistapoolDataUpdateCoordinator
 
+# Forceer import van platform-bestanden vóór async_setup_entry wordt aangeroepen
+from . import sensor, switch, number, select
+
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: dict):
