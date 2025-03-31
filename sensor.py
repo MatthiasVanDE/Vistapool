@@ -274,7 +274,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     sensors.append(S_FormLatSensor(coordinator))
     sensors.append(S_FormStreetSensor(coordinator))
 
-    async_add_entities(sensors)
+    async_add_entities(sensors, update_before_add=True)
 
 
 #
