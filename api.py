@@ -1,46 +1,118 @@
+"""API-client voor Vistapool/Oxilife."""
+import time
+import json
+import requests
 import logging
-import os
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-import asyncio  # toegevoegd
 
 _LOGGER = logging.getLogger(__name__)
 
+LOGIN_URL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword"
+REFRESH_URL = "https://securetoken.googleapis.com/v1/token"
+FIRESTORE_URL = "https://firestore.googleapis.com/v1"
+SENDCMD_URL = "https://europe-west1-hayward-europe.cloudfunctions.net/sendCommand"
+SENDPOOL_URL = "https://europe-west1-hayward-europe.cloudfunctions.net/sendPoolCommand"
 
-class VistapoolApi:
-    def __init__(self, credential_path: str):
-        self._firestore_client = None
-        self._credential_path = credential_path
+class VistapoolApiClient:
+    """Simpel Python-client om de Vistapool/Oxilife API te raadplegen."""
 
-    def initialize(self):
-        if not os.path.exists(self._credential_path):
-            _LOGGER.error("Firebase credential file not found at %s", self._credential_path)
-            raise FileNotFoundError(f"Firebase credential file not found at {self._credential_path}")
+    def __init__(self, api_key, email, password, project, gateway, pool_id):
+        self._api_key = api_key
+        self._email = email
+        self._password = password
+        self._project = project
+        self._gateway = gateway
+        self._pool_id = pool_id
 
-        cred = credentials.Certificate(self._credential_path)
-        firebase_admin.initialize_app(cred)
-        self._firestore_client = firestore.client()
+        self._id_token = None
+        self._refresh_token = None
+        self._token_acquired_at = 0
 
-    def get_document_data(self, document_path: str) -> dict[str, any]:
-        """Synchronous call to Firestore."""
-        doc_ref = self._firestore_client.document(document_path)
-        doc = doc_ref.get()
-        return doc.to_dict()
+        # NIET direct login() hier!
+        # Gewoon constructor zonder blokkerend call.
 
-    async def async_get_document_data(self, document_path: str) -> dict[str, any]:
-        """Async wrapper for get_document_data using asyncio.to_thread()."""
-        return await asyncio.to_thread(self.get_document_data, document_path)
+    def login(self):
+        """Login met email/wachtwoord, haal id_token en refresh_token op (blokkerend)."""
+        # Als we al een token hebben dat niet (bijna) verlopen is, kun je skippen.
+        if time.time() - self._token_acquired_at < 3500 and self._id_token:
+            return  # token is nog geldig genoeg
 
-    def parse_firestore_data(self, data: dict[str, any]) -> dict[str, any]:
-        parsed_data = {}
-        if not data:
-            return parsed_data
+        url = f"{LOGIN_URL}?key={self._api_key}"
+        payload = {
+            "email": self._email,
+            "password": self._password,
+            "returnSecureToken": True
+        }
+        resp = requests.post(url, json=payload, timeout=15)
+        resp.raise_for_status()
+        data = resp.json()
+        self._id_token = data["idToken"]
+        self._refresh_token = data["refreshToken"]
+        self._token_acquired_at = time.time()
+        _LOGGER.debug("Vistapool ingelogd, id_token verkregen.")
 
-        for key, value in data.items():
-            if isinstance(value, dict) and "value" in value:
-                parsed_data[key] = value["value"]
-            else:
-                parsed_data[key] = value
+    def refresh_id_token_if_needed(self):
+        """Vernieuw token als deze (bijna) is verlopen."""
+        if time.time() - self._token_acquired_at > 3500:
+            _LOGGER.debug("Vistapool token verversen...")
+            url = f"{REFRESH_URL}?key={self._api_key}"
+            payload = {
+                "grant_type": "refresh_token",
+                "refresh_token": self._refresh_token,
+            }
+            resp = requests.post(url, data=payload, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+            self._id_token = data["id_token"]
+            self._refresh_token = data["refresh_token"]
+            self._token_acquired_at = time.time()
+            _LOGGER.debug("Vistapool token vernieuwd.")
 
-        return parsed_data
+    def get_pool_document(self):
+        """Firestore-document ophalen (blokkerend)."""
+        self.refresh_id_token_if_needed()
+        headers = {"Authorization": f"Bearer {self._id_token}"}
+        url = (
+            f"{FIRESTORE_URL}/projects/{self._project}/databases/(default)/"
+            f"documents/pools/{self._pool_id}"
+        )
+        resp = requests.get(url, headers=headers, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    def send_command(self, operation, changes="10"):
+        """Simpele sendCommand call (blokkerend)."""
+        self.refresh_id_token_if_needed()
+        headers = {
+            "Authorization": f"Bearer {self._id_token}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "gateway": self._gateway,
+            "poolId": self._pool_id,
+            "operation": operation,
+            "operationId": None,
+            "changes": changes,
+            "pool": None,
+            "source": "homeassistant"
+        }
+        resp = requests.post(SENDCMD_URL, json=payload, headers=headers, timeout=15)
+        resp.raise_for_status()
+
+    def send_pool_command(self, operation, changes: dict):
+        """Volledige poolinstellingen wijzigen (blokkerend)."""
+        self.refresh_id_token_if_needed()
+        headers = {
+            "Authorization": f"Bearer {self._id_token}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "gateway": self._gateway,
+            "poolId": self._pool_id,
+            "operation": operation,
+            "operationId": None,
+            "changes": json.dumps(changes),
+            "pool": None,
+            "source": "homeassistant"
+        }
+        resp = requests.post(SENDPOOL_URL, json=payload, headers=headers, timeout=15)
+        resp.raise_for_status()
