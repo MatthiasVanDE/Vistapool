@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -21,29 +22,27 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Vistapool from a config entry."""
-    _LOGGER.debug("Setting up Vistapool integration entry: %s", entry.entry_id)
 
-    hass.data.setdefault(DOMAIN, {})
-
-    # 🔧 Ophalen van configuratie
-    credential_path = entry.data["credential_path"]
     user_id = entry.data["user_id"]
 
-    # 🔌 Initialiseer en bewaar de API
+    # 🔧 Bepaal pad naar firebase.json (niet via entry.data)
+    credential_path = os.path.join(
+        hass.config.path("custom_components", "vistapool", "firebase.json")
+    )
+
     api = VistapoolApi(credential_path)
     api.initialize()
 
+    hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
         "api": api,
     }
 
-    # 🔁 Coordinator opzetten
     coordinator = VistapoolDataUpdateCoordinator(hass, api, user_id)
     await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id]["coordinator"] = coordinator
 
-    # 🔌 Registreer de gebruikte platforms (sensor, switch, number, etc.)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
