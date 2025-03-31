@@ -1,0 +1,279 @@
+
+{
+  "isAWS": true,
+  "backwash": {
+    "interval": 180,
+    "mode": 1,
+    "remainingTime": 0,
+    "status": 0,
+    "frequency": 40320,
+    "startAt": 1742468400
+  },
+  "wifi": "P32202209190043",
+  "id": "005E00464E43501320343337",
+  "light": {
+    "mode": 0,
+    "freq": 259200,
+    "to": 28801,
+    "from": 25201,
+    "status": 0
+  },
+  "hidro": {
+    "cloration_enabled": 0,
+    "temperature_enabled": 0,
+    "control": 0,
+    "fl1": 1,
+    "temperature_value": 0,
+    "al4": 0,
+    "hasHidroControl": 1,
+    "cover": 0,
+    "current": 0,
+    "cellPartialTime": 34192582,
+    "is_electrolysis": false,
+    "fl2": 1,
+    "cellTotalTime": 34061510,
+    "reduction": 10,
+    "level": 1000,
+    "maxAllowedValue": 1000,
+    "low": 0,
+    "cover_enabled": 0,
+    "measure": "%"
+  },
+  "filtration": {
+    "interval1": {
+      "to": 61200,
+      "from": 28800
+    },
+    "interval2": {
+      "from": 0,
+      "to": 0
+    },
+    "intel": {
+      "time": "480",
+      "temp": 28
+    },
+    "timerVel2": 0,
+    "hasSmart": 1,
+    "heating": {
+      "temp": 28,
+      "clima": 0,
+      "tempHi": 0
+    },
+    "manVel": 1,
+    "hasHeat": 0,
+    "pumpType": 1,
+    "timerVel3": 0,
+    "status": 0,
+    "timerVel1": 1,
+    "interval3": {
+      "to": 0,
+      "from": 0
+    },
+    "mode": 1,
+    "smart": {
+      "tempMin": 10,
+      "tempHigh": 25,
+      "freeze": 0
+    }
+  },
+  "main": {
+    "hideRelays": 0,
+    "hasUV": 0,
+    "RSSI": 0,
+    "hasLED": 1,
+    "LEDPulse": 0,
+    "hasIO": 0,
+    "hasLinkedAuto": 0,
+    "hideTemperature": 0,
+    "hideLighting": 0,
+    "FWU_enabled": true,
+    "networkPresent": 1,
+    "version": 1280,
+    "hasPH": 1,
+    "hasBackwash": 1,
+    "hasWifi": 0,
+    "hasCD": 0,
+    "hideFiltration": 0,
+    "hasCL": 0,
+    "hasRX": 1,
+    "temperature": 14.7,
+    "wifiVersion": 36,
+    "localTime": 1742927950,
+    "hasLinked": 0,
+    "hasHidro": 1
+  },
+  "modules": {
+    "rx": {
+      "pump_status": 1,
+      "current": 717,
+      "tank": 0,
+      "status": {
+        "value": 650
+      }
+    },
+    "ph": {
+      "type": "ACID",
+      "tank": 0,
+      "current": "717",
+      "pump_high_on": 0,
+      "status": {
+        "high_value": "720",
+        "low_value": "700"
+      },
+      "al3": 0,
+      "pump_low_on": 0
+    },
+    "cl": {
+      "pump_status": 1,
+      "current": "0",
+      "status": {
+        "value": "100"
+      },
+      "tank": 0
+    },
+    "cd": {
+      "current": "0",
+      "status": {
+        "value": "5000"
+      },
+      "tank": 0
+    },
+    "uv": {
+      "total": 0,
+      "partial": 0,
+      "status": 0
+    },
+    "io": {
+      "activation": 30,
+      "status": "8192",
+      "level": 10
+    }
+  },
+  "relays": {
+    "filtration": {
+      "heating": {
+        "status": 0,
+        "gpio": "0"
+      },
+      "gpio": 2
+    },
+    "backwash": {
+      "gpio": 5
+    },
+    "io": {
+      "gpio": "187"
+    },
+    "rx": {
+      "gpio": "0"
+    },
+    "light": {
+      "gpio": 0
+    },
+    "cl": {
+      "gpio": "0"
+    },
+    "relay4": {
+      "info": {
+        "from": 0,
+        "delay": 0,
+        "onoff": 0,
+        "freq2": 86400,
+        "manAutoTemp": 0,
+        "signal": 0,
+        "from2": 0,
+        "polarity": 0,
+        "status": 0,
+        "freq": 86400,
+        "to": 0,
+        "to2": 0,
+        "tiempoOn": 0,
+        "key": 1
+      },
+      "name": "Warmtepomp"
+    },
+    "uv": {
+      "gpio": "0"
+    },
+    "relay2": {
+      "name": "",
+      "info": {
+        "signal": 0,
+        "to2": 0,
+        "key": 1,
+        "onoff": 0,
+        "manAutoTemp": 0,
+        "from": 0,
+        "tiempoOn": 0,
+        "from2": 0,
+        "status": 0,
+        "delay": 0,
+        "to": 0,
+        "polarity": 0,
+        "freq": 86400,
+        "freq2": 86400
+      }
+    },
+    "relay1": {
+      "info": {
+        "polarity": 0,
+        "tiempoOn": 0,
+        "status": 0,
+        "signal": 0,
+        "to": 0,
+        "freq": 86400,
+        "key": 1,
+        "from2": 0,
+        "onoff": 0,
+        "from": 0,
+        "delay": 0,
+        "to2": 0,
+        "manAutoTemp": 0,
+        "freq2": 86400
+      },
+      "name": ""
+    },
+    "relay3": {
+      "info": {
+        "signal": 0,
+        "from": 0,
+        "key": 1,
+        "onoff": 0,
+        "to": 0,
+        "status": 0,
+        "freq": 86400,
+        "tiempoOn": 0,
+        "to2": 0,
+        "polarity": 0,
+        "freq2": 86400,
+        "from2": 0,
+        "delay": 0,
+        "manAutoTemp": 0
+      },
+      "name": ""
+    },
+    "cd": {
+      "gpio": "0"
+    },
+    "ph": {
+      "acid": {
+        "gpio": "1"
+      },
+      "base": {
+        "gpio": "0"
+      }
+    }
+  },
+  "company": 1,
+  "updatedAt": 1742924376,
+  "createdAt": 1714641734,
+  "present": true,
+  "form": {
+    "lng": 4.0020989,
+    "country": "",
+    "city": "Erpe-Mere",
+    "name": "Van der Elst ",
+    "zipcode": "9420",
+    "lat": 50.945615,
+    "street": "Erpe-Mere "
+  }
+}

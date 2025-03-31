@@ -13,7 +13,7 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 
-class VistapoolCoordinator(DataUpdateCoordinator[dict[str, Any]]):
+class VistapoolDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def __init__(self, hass: HomeAssistant, api: VistapoolApi, user_id: str):
         """Initialize my coordinator."""
         self.api = api
