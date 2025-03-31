@@ -37,6 +37,7 @@ class VistapoolDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Deze methode draait elke update_interval (bvb. 30s)."""
+        _LOGGER.warning("_async_update_data wordt uitgevoerd")
         try:
             # 1. Inloggen via threadpool
             await self.hass.async_add_executor_job(self.api.login)
@@ -45,4 +46,5 @@ class VistapoolDataUpdateCoordinator(DataUpdateCoordinator):
             parsed = parse_firestore_doc(doc)
             return parsed
         except Exception as err:
+            _LOGGER.error(f"Fout tijdens update: {err}")
             raise UpdateFailed(f"Error updating data from Vistapool: {err}") from err
