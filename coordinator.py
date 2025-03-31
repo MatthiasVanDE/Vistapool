@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from .api import VistapoolApiClient
 from .firestore_parser import parse_firestore_doc
 
+
 _LOGGER = logging.getLogger(__name__)
 
 class VistapoolDataUpdateCoordinator(DataUpdateCoordinator):
