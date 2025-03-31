@@ -4,9 +4,7 @@
   "version": "1.0.0",
   "config_flow": true,
   "documentation": "https://github.com/MatthiasVanDE/Vistapool",
-  "requirements": [
-    "firebase-admin==6.2.0"
-  ],
+  "requirements": [],
   "dependencies": [],
   "codeowners": ["@MatthiasVanDE"]
 }
