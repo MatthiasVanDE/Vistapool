@@ -349,6 +349,12 @@ class S_RelayInfoGenericSensor(CoordinatorEntity, SensorEntity):
 
 class S_GlobalSensorBase(CoordinatorEntity, SensorEntity):
     """Top-level info (isAWS, wifi, id, company, updatedAt, createdAt, present)."""
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -441,6 +447,12 @@ class S_GlobalPresentSensor(S_GlobalSensorBase):
 
 class S_BackwashSensorBase(CoordinatorEntity, SensorEntity):
     """Keys: interval, mode, remainingTime, status, frequency, startAt."""
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -519,6 +531,12 @@ class S_BackwashStartAtSensor(S_BackwashSensorBase):
 
 class S_LightSensorBase(CoordinatorEntity, SensorEntity):
     """Keys: mode, freq, to, from, status."""
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -567,7 +585,7 @@ class S_LightFromSensor(S_LightSensorBase):
     @property
     def native_value(self):
         value = self.coordinator.data.get("light", {}).get("from", None)
-        return datetime.fromtimestamp(value)
+        return intervalTime(value)
 
 class S_LightStatusSensor(S_LightSensorBase):
     def __init__(self, coordinator):
@@ -585,6 +603,12 @@ class S_LightStatusSensor(S_LightSensorBase):
 
 class S_HydrolyseSensorBase(CoordinatorEntity, SensorEntity):
     """Keys: cloration_enabled, temperature_enabled, control, fl1, fl2, etc."""
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -790,6 +814,12 @@ class S_HidroMeasureSensor(S_HydrolyseSensorBase):
 #
 
 class S_FiltrationSensorBase(CoordinatorEntity, SensorEntity):
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -1103,6 +1133,12 @@ class S_FiltrationSmartFreezeSensor(S_FiltrationSensorBase):
 
 class S_MainSensorBase(CoordinatorEntity, SensorEntity):
     """Keys in data['main']"""
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -1374,6 +1410,12 @@ class S_MainHasHidroSensor(S_MainSensorBase):
 #
 
 class S_ModulesSensorBase(CoordinatorEntity, SensorEntity):
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -1760,6 +1802,12 @@ class S_ModulesIoLevelSensor(S_ModulesSensorBase):
 #
 
 class S_RelaysSensorBase(CoordinatorEntity, SensorEntity):
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
@@ -1930,10 +1978,10 @@ class S_RelaysPhBaseGpioSensor(S_RelaysSensorBase):
 class S_RelaysUvGpioSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
-        self._attr_name = "Relays UV GPIO"
         self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_uv_gpio"
 
     @property
+        self._attr_name = "Relays UV GPIO"
     def native_value(self):
         return (
             self.coordinator.data.get("relays", {})
@@ -2212,6 +2260,12 @@ class S_RelaysRelay3NameSensor(S_RelaysSensorBase):
 #
 
 class S_FormSensorBase(CoordinatorEntity, SensorEntity):
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
     @property
     def device_info(self):
         return {
