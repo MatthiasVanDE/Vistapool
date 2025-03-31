@@ -1,61 +1,56 @@
-"""Vistapool (Sugar Valley Oxilife) integratie."""
+from __future__ import annotations
+
 import logging
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
 
 from .const import DOMAIN, PLATFORMS
+from .api import VistapoolApi
 from .coordinator import VistapoolDataUpdateCoordinator
-
-# Forceer import van platform-bestanden vóór async_setup_entry wordt aangeroepen
-from . import sensor, switch, number, select
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup(hass: HomeAssistant, config: dict):
-    """Set up via YAML (als je dat wilt).
-       Als je alleen de UI-config-flow gebruikt, kun je dit leeg laten."""
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the Vistapool component."""
+    hass.data.setdefault(DOMAIN, {})
     return True
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up vistapool vanuit config flow (UI)."""
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Vistapool from a config entry."""
+    _LOGGER.debug("Setting up Vistapool integration entry: %s", entry.entry_id)
+
     hass.data.setdefault(DOMAIN, {})
 
-    # Maak DataUpdateCoordinator aan
-    api = hass.data[DOMAIN][entry.entry_id]["api"]
+    # 🔧 Ophalen van configuratie
+    credential_path = entry.data["credential_path"]
     user_id = entry.data["user_id"]
 
+    # 🔌 Initialiseer en bewaar de API
+    api = VistapoolApi(credential_path)
+    api.initialize()
+
+    hass.data[DOMAIN][entry.entry_id] = {
+        "api": api,
+    }
+
+    # 🔁 Coordinator opzetten
     coordinator = VistapoolDataUpdateCoordinator(hass, api, user_id)
     await coordinator.async_config_entry_first_refresh()
 
-    # Sla op zodat andere platformen hem kunnen gebruiken
-    hass.data[DOMAIN][entry.entry_id] = coordinator
+    hass.data[DOMAIN][entry.entry_id]["coordinator"] = coordinator
 
-    # Forward naar de platformen (sensor, switch, etc.)
+    # 🔌 Registreer de gebruikte platforms (sensor, switch, number, etc.)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-
-    async def handle_set_timer_intervals(call):
-        interval1_from = call.data["interval1_from"]
-        interval1_to = call.data["interval1_to"]
-        # ...
-        changes = {
-            "filtration": {
-                "interval1": {
-                    "from": interval1_from,
-                    "to": interval1_to
-                }
-            }
-        }
-        await hass.async_add_executor_job(
-            coordinator.api.send_pool_command, "WRP", changes
-        )
-        await coordinator.async_request_refresh()
-
-    hass.services.async_register(DOMAIN, "set_timer_intervals", handle_set_timer_intervals)
 
     return True
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Verwijder integratie."""
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Handle removal of an entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
