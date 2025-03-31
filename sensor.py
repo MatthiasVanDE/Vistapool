@@ -1978,10 +1978,10 @@ class S_RelaysPhBaseGpioSensor(S_RelaysSensorBase):
 class S_RelaysUvGpioSensor(S_RelaysSensorBase):
     def __init__(self, coordinator):
         super().__init__(coordinator)
+        self._attr_name = "Relays UV GPIO"
         self._attr_unique_id = f"s_{coordinator.api._pool_id}_relays_uv_gpio"
 
     @property
-        self._attr_name = "Relays UV GPIO"
     def native_value(self):
         return (
             self.coordinator.data.get("relays", {})
