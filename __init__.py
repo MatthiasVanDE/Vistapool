@@ -21,7 +21,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.data.setdefault(DOMAIN, {})
 
     # Maak DataUpdateCoordinator aan
-    coordinator = VistapoolDataUpdateCoordinator(hass, entry.data)
+    api = hass.data[DOMAIN][entry.entry_id]["api"]
+    user_id = entry.data["user_id"]
+
+    coordinator = VistapoolDataUpdateCoordinator(hass, api, user_id)
     await coordinator.async_config_entry_first_refresh()
 
     # Sla op zodat andere platformen hem kunnen gebruiken
