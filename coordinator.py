@@ -1,4 +1,5 @@
 """DataUpdateCoordinator voor vistapool (niet-blokkerend)."""
+
 import logging
 from datetime import timedelta
 
@@ -25,7 +26,6 @@ class VistapoolDataUpdateCoordinator(DataUpdateCoordinator):
             pool_id=config_data["pool_id"]
         )
 
-        # NIET meer self.api.login() hier!
         update_interval = timedelta(seconds=30)
 
         super().__init__(
@@ -35,22 +35,22 @@ class VistapoolDataUpdateCoordinator(DataUpdateCoordinator):
             update_interval=update_interval,
         )
 
-async def _async_update_data(self):
-    """Deze methode draait elke update_interval (bvb. 30s)."""
-    try:
-        # 1. Inloggen via threadpool
-        await self.hass.async_add_executor_job(self.api.login)
+    async def _async_update_data(self):
+        """Deze methode draait elke update_interval (bvb. 30s)."""
+        try:
+            # 1. Inloggen via threadpool
+            await self.hass.async_add_executor_job(self.api.login)
 
-        # 2. Pool document ophalen
-        doc = await self.hass.async_add_executor_job(self.api.get_pool_document)
-        _LOGGER.debug("Opgehaald Firestore-document: %s", doc)
+            # 2. Pool document ophalen
+            doc = await self.hass.async_add_executor_job(self.api.get_pool_document)
+            _LOGGER.debug("Opgehaald Firestore-document: %s", doc)
 
-        # 3. Parse naar dictionary
-        parsed = parse_firestore_doc(doc)
-        _LOGGER.debug("Geparste data: %s", parsed)
+            # 3. Parse naar dictionary
+            parsed = parse_firestore_doc(doc)
+            _LOGGER.debug("Geparste data: %s", parsed)
 
-        return parsed
+            return parsed
 
-    except Exception as err:
-        _LOGGER.error("Fout bij updaten: %s", err)
-        raise UpdateFailed(f"Error updating data from Vistapool: {err}") from err
+        except Exception as err:
+            _LOGGER.error("Fout bij updaten: %s", err)
+            raise UpdateFailed(f"Error updating data from Vistapool: {err}") from err
