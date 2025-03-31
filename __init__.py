@@ -4,7 +4,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN, PLATFORMS
-from .coordinator import VistapoolDataUpdateCoordinator
+from .coordinator import VistapoolCoordinator
 
 # Forceer import van platform-bestanden vóór async_setup_entry wordt aangeroepen
 from . import sensor, switch, number, select
@@ -21,7 +21,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.data.setdefault(DOMAIN, {})
 
     # Maak DataUpdateCoordinator aan
-    coordinator = VistapoolDataUpdateCoordinator(hass, entry.data)
+    coordinator = VistapoolCoordinator(hass, entry.data)
     await coordinator.async_config_entry_first_refresh()
 
     # Sla op zodat andere platformen hem kunnen gebruiken
