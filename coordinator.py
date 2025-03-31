@@ -35,14 +35,22 @@ class VistapoolDataUpdateCoordinator(DataUpdateCoordinator):
             update_interval=update_interval,
         )
 
-    async def _async_update_data(self):
-        """Deze methode draait elke update_interval (bvb. 30s)."""
-        try:
-            # 1. Inloggen via threadpool
-            await self.hass.async_add_executor_job(self.api.login)
-            # 2. Pool document ophalen
-            doc = await self.hass.async_add_executor_job(self.api.get_pool_document)
-            parsed = parse_firestore_doc(doc)
-            return parsed
-        except Exception as err:
-            raise UpdateFailed(f"Error updating data from Vistapool: {err}") from err
+async def _async_update_data(self):
+    """Deze methode draait elke update_interval (bvb. 30s)."""
+    try:
+        # 1. Inloggen via threadpool
+        await self.hass.async_add_executor_job(self.api.login)
+
+        # 2. Pool document ophalen
+        doc = await self.hass.async_add_executor_job(self.api.get_pool_document)
+        _LOGGER.debug("Opgehaald Firestore-document: %s", doc)
+
+        # 3. Parse naar dictionary
+        parsed = parse_firestore_doc(doc)
+        _LOGGER.debug("Geparste data: %s", parsed)
+
+        return parsed
+
+    except Exception as err:
+        _LOGGER.error("Fout bij updaten: %s", err)
+        raise UpdateFailed(f"Error updating data from Vistapool: {err}") from err
