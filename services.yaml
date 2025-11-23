@@ -1,4 +1,3 @@
-# services.yaml (optioneel)
 set_timer_intervals:
   name: "Set Filtration Timer Intervals"
   description: "Stel de filtration interval1, interval2, etc. in"

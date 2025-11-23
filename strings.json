@@ -1,0 +1,69 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vistapool Zwembad Configuratie",
+        "description": "Configureer je Vistapool/Sugar Valley Oxilife zwembad controller. Zie de [documentatie]({docs_url}) voor meer informatie.",
+        "data": {
+          "email": "E-mail",
+          "password": "Wachtwoord",
+          "api_key": "Firebase API Key",
+          "project": "Firebase Project ID",
+          "gateway": "Gateway ID",
+          "pool_id": "Pool ID"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Ongeldige inloggegevens",
+      "cannot_connect": "Kan geen verbinding maken met de Vistapool API",
+      "unknown": "Onverwachte fout opgetreden"
+    },
+    "abort": {
+      "already_configured": "Deze pool is al geconfigureerd"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Vistapool Opties",
+        "description": "Configureer de instellingen voor je Vistapool integratie.",
+        "data": {
+          "scan_interval": "Update interval (seconden)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_timer_intervals": {
+      "name": "Stel filtratie timers in",
+      "description": "Stel de filtratie timer intervals in (in seconden sinds middernacht).",
+      "fields": {
+        "interval1_from": {
+          "name": "Interval 1 start",
+          "description": "Starttijd interval 1 (seconden sinds middernacht)"
+        },
+        "interval1_to": {
+          "name": "Interval 1 einde",
+          "description": "Eindtijd interval 1 (seconden sinds middernacht)"
+        },
+        "interval2_from": {
+          "name": "Interval 2 start",
+          "description": "Starttijd interval 2 (optioneel)"
+        },
+        "interval2_to": {
+          "name": "Interval 2 einde",
+          "description": "Eindtijd interval 2 (optioneel)"
+        },
+        "interval3_from": {
+          "name": "Interval 3 start",
+          "description": "Starttijd interval 3 (optioneel)"
+        },
+        "interval3_to": {
+          "name": "Interval 3 einde",
+          "description": "Eindtijd interval 3 (optioneel)"
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,13 @@
 {
   "domain": "vistapool",
   "name": "Vistapool / Sugar Valley Oxilife",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "config_flow": true,
   "documentation": "https://github.com/MatthiasVanDE/Vistapool",
-  "requirements": [],
+  "requirements": ["requests>=2.31.0"],
   "dependencies": [],
-  "codeowners": ["@MatthiasVanDE"]
+  "codeowners": ["@MatthiasVanDE"],
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/MatthiasVanDE/Vistapool/issues",
+  "integration_type": "device"
 }
